@@ -1,36 +1,102 @@
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
-
-// Composables
-import { createRouter, createWebHistory } from 'vue-router'
-import { setupLayouts } from 'virtual:generated-layouts'
-import { routes } from 'vue-router/auto-routes'
+import { createRouter, createWebHistory } from "vue-router/auto";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: setupLayouts(routes),
-})
+  history: createWebHistory(process.env.BASE_URL),
 
-// Workaround for https://github.com/vitejs/vite/issues/11804
-router.onError((err, to) => {
-  if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
-    if (localStorage.getItem('vuetify:dynamic-reload')) {
-      console.error('Dynamic import error, reloading page did not fix it', err)
-    } else {
-      console.log('Reloading page to fix dynamic import error')
-      localStorage.setItem('vuetify:dynamic-reload', 'true')
-      location.assign(to.fullPath)
-    }
-  } else {
-    console.error(err)
-  }
-})
+  routes: [
+    // Route for Main Pages
+    {
+      path: "/",
+      component: () => import("@/layout/MainLayout.vue"),
+      children: [
+        // Main Pages for All Users
+        {
+          path: "",
+          name: "home",
+          component: () => import("@/pages/home.vue"),
+        },
+        {
+          path: "login",
+          name: "login",
+          component: () => import("@/pages/login .vue"),
+        },
+      ],
+    },
+    {
+      path: "/admin",
+      component: () => import("@/layout/AdminLayout.vue"),
+      children: [
+        {
+          path: "AdminLogin",
+          name: "AdminLogin",
+          component: () => import("@/pages/AdminLogin.vue"),
+        },
 
-router.isReady().then(() => {
-  localStorage.removeItem('vuetify:dynamic-reload')
-})
+        // Building Permit Admin
 
-export default router
+        // Locational Clearance Admin
+
+        // Compliance Monitoring Admin
+        {
+          path: "ComplianceMonitoring",
+          name: "ComplianceMonitoring",
+          component: () =>
+            import(
+              "@/Admin/Modules/ComplianceMonitoring/Compliance/compliance.vue"
+            ), // Or any other component for the root
+        },
+
+        {
+          path: "rqmonitoring",
+          name: "rqmonitoring",
+          component: () =>
+            import(
+              "@/Admin/Modules/ComplianceMonitoring/RQMonitoring/rqmonitoring.vue"
+            ), // Or any other component for the root
+        },
+
+        {
+          path: "opmonitoring",
+          name: "opmonitoring",
+          component: () =>
+            import(
+              "@/Admin/Modules/ComplianceMonitoring/OPMonitoring/opmonitoring.vue"
+            ), // Or any other component for the root
+        },
+
+        // Occupancy Permit Admin
+      ],
+    },
+
+    {
+      path: "/applicant",
+      component: () => import("@/layout/ApplicantLayout.vue"),
+      children: [
+        // Main Pages for Applicant
+        {
+          path: "permits",
+          name: "permits",
+          component: () => import("@/pages/permits.vue"),
+        },
+        {
+          path: "services",
+          name: "services",
+          component: () => import("@/pages/services.vue"),
+        },
+        {
+          path: "noc",
+          name: "noc",
+          component: () => import("@/Applicant/NocApplication/noc.vue"), // Or any other component for the root
+        },
+        // Building Permit Applicant
+
+        // Locational Clearance Applicant
+
+        // Occupancy Permit Applicant
+
+        //
+      ],
+    },
+  ],
+});
+export default router;
