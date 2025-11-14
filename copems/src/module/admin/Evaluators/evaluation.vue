@@ -264,6 +264,7 @@
                       variant="outlined"
                       size="small"
                       class="text-none"
+                      to="/adminlayout/evaluationplan"
                       @click="goToEvaluationPage(plan)"
                       >Evaluate</v-btn
                     >

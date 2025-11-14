@@ -490,7 +490,7 @@ const logout = () => {
 };
 
 const viewDetails = () => {
-  router.push("/admin/evaluation");
+  router.push("/adminlayout/evaluation");
 };
 </script>
 

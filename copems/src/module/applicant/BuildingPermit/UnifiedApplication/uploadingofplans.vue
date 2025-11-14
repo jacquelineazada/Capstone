@@ -168,8 +168,6 @@
                       class="text-none rounded-pill font-weight-bold"
                       @click="clearAllFiles"
                     >
-                      <vf-icon start>mdi-delete</vf-icon>
-                      Clear All
                     </v-btn>
                     <v-btn
                       color="#0000CC"
@@ -210,7 +208,7 @@
             color="#0000CC"
             class="text-none rounded-pill px-8"
             @click="closeSuccessDialog"
-            to="/applicant/selectancillary"
+            to="/applicantlayout/selectancillary"
             elevation="2"
           >
             Continue
