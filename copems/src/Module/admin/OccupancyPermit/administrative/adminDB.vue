@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar flat color="#0000CC" dark height="88" app class="elevation-4">
+    <v-app-bar flat color="#6060d4ff" dark height="88" app class="elevation-4">
       <v-container fluid class="d-flex align-center py-0" style="max-width: 100%">
         <div class="d-flex align-center">
           <v-img
