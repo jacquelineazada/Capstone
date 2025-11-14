@@ -359,6 +359,7 @@
                   elevation="2"
                   @click="nextStep"
                   variant="elevated"
+                  to="/applicantlayout/usecharacterofoccupancy"
                 >
                   Next<v-icon right>mdi-arrow-right</v-icon>
                 </v-btn>

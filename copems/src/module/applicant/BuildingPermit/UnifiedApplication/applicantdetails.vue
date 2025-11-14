@@ -336,6 +336,7 @@
                   elevation="2"
                   @click="validateAndProceed"
                   variant="elevated"
+                  to="/applicantlayout/constructioninformation"
                 >
                   Next<v-icon right>mdi-arrow-right</v-icon>
                 </v-btn>

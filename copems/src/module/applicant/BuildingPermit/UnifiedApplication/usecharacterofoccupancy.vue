@@ -395,9 +395,8 @@
                   color="blue-darken-3"
                   class="btn-rounded"
                   elevation="2"
-                  to="/applicant/engineerinformation"
+                  to="/applicantlayout/engineerinformation"
                   @click="goToNextFormStep"
-                  :disabled="!formValid"
                   variant="elevated"
                 >
                   Next<v-icon right>mdi-arrow-right</v-icon>
