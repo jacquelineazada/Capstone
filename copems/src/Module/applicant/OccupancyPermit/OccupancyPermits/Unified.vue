@@ -1,19 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar flat color="blue-darken-3" dark height="88" app> </v-app-bar>
     <v-main class="bg-grey-lighten-4">
-      <v-card
-        flat
-        class="d-flex align-center justify-space-between px-6"
-        style="background-color: white; border-bottom: 1px solid #e0e0e0; height: 50px"
-      >
-        <div class="d-flex align-center">
-          <v-icon color="blue-darken-3" class="mr-3">mdi-office-building-outline</v-icon>
-          <h3 class="mb-0 font-weight-bold page-title-responsive">
-            Occupancy Permit Application
-          </h3>
-        </div>
-      </v-card>
       <div class="stepper-wrapper">
         <v-stepper
           v-model="currentStep"
@@ -21,63 +8,6 @@
           flat
           class="mb-4 mt-2 stepper-elevated"
         >
-          <v-stepper-header>
-            <v-stepper-item
-              title="Application"
-              value="1"
-              :complete="currentStep > 1"
-              :color="currentStep >= 1 ? 'blue-darken-1' : 'grey lighten-2'"
-              class="stepper-item-custom"
-            ></v-stepper-item>
-            <v-divider
-              :thickness="3"
-              :style="{ 'border-color': currentStep > 1 ? '#1976D2' : '#e0e0e0' }"
-              class="mx-2"
-            ></v-divider>
-            <v-stepper-item
-              title="Owner/Applicant"
-              value="2"
-              :complete="currentStep > 2"
-              :color="currentStep >= 2 ? 'blue-darken-1' : 'grey lighten-2'"
-              class="stepper-item-custom"
-            ></v-stepper-item>
-            <v-divider
-              :thickness="3"
-              :style="{ 'border-color': currentStep > 2 ? '#1976D2' : '#e0e0e0' }"
-              class="mx-2"
-            ></v-divider>
-            <v-stepper-item
-              title="Application Details"
-              value="3"
-              :complete="currentStep > 3"
-              :color="currentStep >= 3 ? 'blue-darken-1' : 'grey lighten-2'"
-              class="stepper-item-custom"
-            ></v-stepper-item>
-            <v-divider
-              :thickness="3"
-              :style="{ 'border-color': currentStep > 3 ? '#1976D2' : '#e0e0e0' }"
-              class="mx-2"
-            ></v-divider>
-            <v-stepper-item
-              title="Signatories Details"
-              value="4"
-              :complete="currentStep > 4"
-              :color="currentStep >= 4 ? 'blue-darken-1' : 'grey lighten-2'"
-              class="stepper-item-custom"
-            ></v-stepper-item>
-            <v-divider
-              :thickness="3"
-              :style="{ 'border-color': currentStep > 4 ? '#1976D2' : '#e0e0e0' }"
-              class="mx-2"
-            ></v-divider>
-            <v-stepper-item
-              title="Review Application"
-              value="5"
-              :complete="currentStep > 5"
-              :color="currentStep >= 5 ? 'blue-darken-1' : 'grey lighten-2'"
-              class="stepper-item-custom"
-            ></v-stepper-item>
-          </v-stepper-header>
         </v-stepper>
       </div>
       <v-container fluid>
@@ -434,10 +364,9 @@
             Download PDF
           </v-btn>
           <div class="d-flex">
-            <v-btn color="blue-grey-lighten-4" dark class="mt-4 mr-2" @click="back"
-              >Back</v-btn
-            >
-            <v-btn color="blue" dark class="mt-4" @click="submit">Submit</v-btn>
+            <div>
+              <v-btn color="primary" to="/applicant/FormsSection">Save</v-btn>
+            </div>
             <v-dialog v-model="showSuccessDialog" persistent width="auto">
               <v-card
                 class="d-flex flex-column align-center text-center pa-6"

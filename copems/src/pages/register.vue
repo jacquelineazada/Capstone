@@ -57,13 +57,17 @@
                 Register to access our services
               </v-card-subtitle>
               <v-card-text>
-                <v-form>
+                <v-form @submit.prevent="handleRegister" ref="registerForm">
                   <v-text-field
+                    v-model="email"
                     label="Email Address"
                     density="comfortable"
                     variant="outlined"
                     class="mb-4"
                     prepend-inner-icon="mdi-email-outline"
+                    :rules="emailRules"
+                    type="email"
+                    required
                   />
                   <v-text-field
                     v-model="password"
@@ -75,6 +79,8 @@
                     :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     @click:append-inner="toggleShowPassword"
                     class="mb-2"
+                    :rules="passwordRules"
+                    required
                   />
                   <v-text-field
                     v-model="confirmPassword"
@@ -86,18 +92,34 @@
                     :append-inner-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     @click:append-inner="toggleShowConfirmPassword"
                     class="mb-2"
+                    :rules="confirmPasswordRules"
+                    required
                   />
+                  
+                  <!-- Success/Error Messages -->
+                  <v-alert
+                    v-if="alertMessage"
+                    :type="alertType"
+                    class="mb-4"
+                    :icon="alertType === 'success' ? 'mdi-check-circle' : 'mdi-alert-circle'"
+                  >
+                    {{ alertMessage }}
+                  </v-alert>
+
                   <v-btn
                     block
                     color="primary"
                     size="large"
                     class="login-btn gradient-btn"
+                    type="submit"
+                    :loading="loading"
+                    :disabled="loading"
                   >
-                    Register
+                    {{ loading ? 'Creating Account...' : 'Register' }}
                   </v-btn>
                   <div class="text-center mt-6">
                     <span class="text-grey-darken-1">Already have an account?</span>
-                    <a href="/login" class="text-primary font-weight-bold ms-1">Login</a>
+                    <router-link to="/login" class="text-primary font-weight-bold ms-1">Login</router-link>
                   </div>
                 </v-form>
               </v-card-text>
@@ -110,14 +132,32 @@
 </template>
 
 <script>
+import { useAuthStore } from '@/stores/auth';
+
 export default {
-  name: "HomePage",
+  name: "RegisterPage",
   data() {
     return {
+      email: "",
       password: "",
       confirmPassword: "",
       showPassword: false,
       showConfirmPassword: false,
+      loading: false,
+      alertMessage: "",
+      alertType: "success",
+      emailRules: [
+        v => !!v || 'Email is required',
+        v => /.+@.+\..+/.test(v) || 'Email must be valid'
+      ],
+      passwordRules: [
+        v => !!v || 'Password is required',
+        v => v.length >= 6 || 'Password must be at least 6 characters'
+      ],
+      confirmPasswordRules: [
+        v => !!v || 'Please confirm your password',
+        v => v === this.password || 'Passwords do not match'
+      ]
     };
   },
   methods: {
@@ -127,7 +167,38 @@ export default {
     toggleShowConfirmPassword() {
       this.showConfirmPassword = !this.showConfirmPassword;
     },
-  },
+    async handleRegister() {
+      // Validate form
+      const { valid } = await this.$refs.registerForm.validate();
+      if (!valid) {
+        return;
+      }
+
+      this.loading = true;
+      this.alertMessage = "";
+
+      try {
+        const authStore = useAuthStore();
+        const result = await authStore.register(this.email, this.password, this.confirmPassword);
+        
+        if (result.success) {
+          this.alertType = "success";
+          this.alertMessage = result.message;
+          
+          // Clear form
+          this.email = "";
+          this.password = "";
+          this.confirmPassword = "";
+          this.$refs.registerForm.reset();
+        }
+      } catch (error) {
+        this.alertType = "error";
+        this.alertMessage = error.message || "Registration failed. Please try again.";
+      } finally {
+        this.loading = false;
+      }
+    }
+  }
 };
 </script>
 

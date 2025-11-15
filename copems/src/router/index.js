@@ -27,9 +27,19 @@ const router = createRouter({
           component: () => import("@/pages/register.vue"),
         },
         {
+          path: "confirm-email",
+          name: "confirm-email",
+          component: () => import("@/pages/confirm-email.vue"),
+        },
+        {
           path: "opinquiry",
           name: "opinquiry",
           component: () => import("@/pages/opinquiry.vue"),
+        },
+        {
+          path: "bpinquiry",
+          name: "bpinquiry", 
+          component: () => import("@/pages/opinquiry.vue"), // Using same component for now
         },
       ],
     },

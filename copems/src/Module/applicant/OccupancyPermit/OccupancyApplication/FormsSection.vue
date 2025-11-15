@@ -200,16 +200,17 @@ export default {
         {
           title: "Completion Certificate",
           icon: "mdi-hammer",
-          to: "/applicant/CompletionForm",
+          to: "/applicant/Completion",
         },
         {
           title: "Electrical Certificate",
           icon: "mdi-lightning-bolt",
-          to: "/applicant/ElectricalForm",
+          to: "/applicant/Electrical",
         },
         {
           title: "Unified Application",
           icon: "mdi-file-document-edit-outline",
+          to: "/applicant/Unified",
         },
       ],
     };

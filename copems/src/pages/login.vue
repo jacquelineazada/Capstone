@@ -57,13 +57,17 @@
                 Login to your account
               </v-card-subtitle>
               <v-card-text>
-                <v-form>
+                <v-form @submit.prevent="handleLogin" ref="loginForm">
                   <v-text-field
+                    v-model="email"
                     label="Email Address"
                     density="comfortable"
                     variant="outlined"
                     class="mb-4"
                     prepend-inner-icon="mdi-email-outline"
+                    :rules="emailRules"
+                    type="email"
+                    required
                   ></v-text-field>
 
                   <v-text-field
@@ -76,6 +80,8 @@
                     :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     @click:append-inner="toggleShowPassword"
                     class="mb-2"
+                    :rules="passwordRules"
+                    required
                   />
 
                   <div class="d-flex justify-space-between align-center mt-2 mb-4">
@@ -91,14 +97,26 @@
                     >
                   </div>
 
+                  <!-- Error/Success Messages -->
+                  <v-alert
+                    v-if="alertMessage"
+                    :type="alertType"
+                    class="mb-4"
+                    :icon="alertType === 'success' ? 'mdi-check-circle' : 'mdi-alert-circle'"
+                  >
+                    {{ alertMessage }}
+                  </v-alert>
+
                   <v-btn
                     block
                     color="primary"
                     size="large"
                     class="login-btn gradient-btn"
-                    to="/applicant/OPapply"
+                    type="submit"
+                    :loading="loading"
+                    :disabled="loading"
                   >
-                    Login
+                    {{ loading ? 'Signing in...' : 'Login' }}
                   </v-btn>
 
                   <div class="text-center mt-6">
@@ -118,19 +136,63 @@
 </template>
 
 <script>
+import { useAuthStore } from '@/stores/auth';
+
 export default {
-  name: "HomePage",
+  name: "LoginPage",
   data() {
     return {
+      email: "",
       password: "",
       showPassword: false,
+      loading: false,
+      alertMessage: "",
+      alertType: "error",
+      emailRules: [
+        v => !!v || 'Email is required',
+        v => /.+@.+\..+/.test(v) || 'Email must be valid'
+      ],
+      passwordRules: [
+        v => !!v || 'Password is required'
+      ]
     };
   },
   methods: {
     toggleShowPassword() {
       this.showPassword = !this.showPassword;
     },
-  },
+    async handleLogin() {
+      // Validate form
+      const { valid } = await this.$refs.loginForm.validate();
+      if (!valid) {
+        return;
+      }
+
+      this.loading = true;
+      this.alertMessage = "";
+
+      try {
+        const authStore = useAuthStore();
+        const success = await authStore.login(this.email, this.password);
+        
+        if (success) {
+          this.alertType = "success";
+          this.alertMessage = "Login successful!";
+          
+          // Redirect to appropriate dashboard based on user role
+          // For now, redirect to applicant dashboard
+          setTimeout(() => {
+            this.$router.push('/applicant/OPapply');
+          }, 1000);
+        }
+      } catch (error) {
+        this.alertType = "error";
+        this.alertMessage = error.message || "Login failed. Please check your credentials.";
+      } finally {
+        this.loading = false;
+      }
+    }
+  }
 };
 </script>
 

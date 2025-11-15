@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main class="no-scroll">
+    <v-main>
       <v-container fluid class="pa-0 content-area">
         <v-row no-gutters class="fill-height">
           <v-col cols="12" md="3" class="pa-0">
@@ -466,6 +466,15 @@
                 </v-card>
                 <div class="d-flex justify-end mt-6 mb-8">
                   <v-btn
+                    color="blue-grey-4"
+                    class="btn-rounded mr-2"
+                    elevation="2"
+                    @click="goBack"
+                    variant="tonal"
+                  >
+                    <v-icon left>mdi-arrow-left</v-icon>Back
+                  </v-btn>
+                  <v-btn
                     color="blue-darken-3"
                     class="btn-rounded"
                     elevation="2"
@@ -473,7 +482,7 @@
                     variant="elevated"
                     to="FormsSection"
                   >
-                    Next<v-icon right>mdi-arrow-right</v-icon>
+                    Save<v-icon right>mdi-arrow-right</v-icon>
                   </v-btn>
                 </div>
               </v-container>
@@ -541,6 +550,10 @@ export default defineComponent({
     goToStep(index) {
       this.currentStep = index;
     },
+    goBack() {
+      // Route to OPlocation page
+      this.$router.push("/applicant/OPlocation");
+    },
     nextStep() {
       console.log("Proceeding to the next step (Review Application)");
     },
@@ -551,15 +564,7 @@ export default defineComponent({
 --- ## Added Styles These styles are crucial for the visual appearance of the new card
 elements and form controls, as defined in your sample code. ```css
 <style scoped>
-.no-scroll {
-  overflow: hidden !important;
-}
-.v-main.no-scroll {
-  height: calc(100vh - 88px);
-  display: flex;
-  flex-direction: column;
-  background: #f6fafd;
-}
+/* Removed .no-scroll to restore main window scrolling */
 .content-area {
   flex: 1;
   overflow-y: auto;

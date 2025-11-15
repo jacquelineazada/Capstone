@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main class="no-scroll">
+    <v-main>
       <v-container fluid class="pa-0 content-area">
         <v-row no-gutters class="fill-height">
           <v-col cols="12" md="3" class="pa-0">
@@ -333,15 +333,7 @@ export default defineComponent({
 /* ================================================= */
 /* --- Styles from Application Shell (Original) --- */
 /* ================================================= */
-.no-scroll {
-  overflow: hidden !important;
-}
-.v-main.no-scroll {
-  height: calc(100vh - 88px);
-  display: flex;
-  flex-direction: column;
-  background: #f6fafd;
-}
+/* Removed .no-scroll to restore main window scrolling */
 .content-area {
   flex: 1;
   overflow-y: auto;

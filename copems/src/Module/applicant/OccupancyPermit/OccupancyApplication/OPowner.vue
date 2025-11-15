@@ -20,20 +20,18 @@
                   v-for="(step, index) in steps"
                   :key="index"
                   flat
-                  :color="
-                    index === 0 && currentStep >= 1 ? 'blue-lighten-5' : '#f6f8fa'
-                  "
+                  :color="currentStep === index ? 'blue-lighten-5' : '#f6f8fa'"
                   class="d-flex align-center pa-3 mb-4 rounded-lg quick-guide-step"
                   :class="{
-                    'active-step': index === 0 && currentStep >= 1,
-                    'clickable-step': true,
+                    'clickable-step': index === 0,
+                    'active-step': currentStep === index,
                   }"
-                  @click="goToQuickGuideStep(index)"
-                  :elevation="index === 0 && currentStep >= 1 ? 3 : 0"
+                  @click="goToStep(index)"
+                  elevation="currentStep === index ? 3 : 0"
                   style="transition: box-shadow 0.16s, background 0.16s"
                 >
                   <v-avatar
-                    :color="index === 0 && currentStep >= 1 ? 'primary' : '#2563EB'"
+                    :color="currentStep === index ? 'primary' : '#2563EB'"
                     size="36"
                     class="white--text mr-3 quick-guide-avatar"
                   >
@@ -65,13 +63,12 @@
 
           <v-col cols="12" md="9" class="pa-6 main-content-bg">
             <div class="main-content-wrapper">
-              <v-container fluid class="px-0 mx-auto" style="max-width: 1200px">
-                <v-stepper
-                  v-model="stepperDummy"
-                  alt-labels
-                  flat
-                  class="mb-4 mt-2 stepper-elevated"
-                >
+              <v-stepper
+                v-model="stepperDummy"
+                alt-labels
+                flat
+                class="mb-6 stepper-elevated"
+              >
                   <v-stepper-header>
                     <v-stepper-item
                       title="Application"
@@ -132,14 +129,14 @@
                   </v-stepper-header>
                 </v-stepper>
 
+              <v-form ref="form" @submit.prevent="validateAndProceed">
                 <v-card class="my-2 pa-4 card-shadow">
                   <v-card-title class="text-h6 card-title-responsive mb-2">
                     OWNER/APPLICANT DETAILS
                   </v-card-title>
                   <v-divider class="mb-4"></v-divider>
                   <v-card-text>
-                    <v-form ref="form" @submit.prevent="validateAndProceed">
-                      <v-card class="mb-4 card-section">
+                    <v-card class="mb-4 card-section">
                         <v-card-title class="text-h6 card-title-responsive section-title">
                           <v-icon left color="blue-darken-3" class="mr-2"
                             >mdi-account</v-icon
@@ -207,8 +204,7 @@
                             </v-col>
                           </v-row>
                         </v-card-text>
-                      </v-card>
-                    </v-form>
+                    </v-card>
                   </v-card-text>
                 </v-card>
                 <div class="d-flex justify-end mt-6 mb-8">
@@ -231,7 +227,7 @@
                     Next<v-icon right>mdi-arrow-right</v-icon>
                   </v-btn>
                 </div>
-              </v-container>
+              </v-form>
             </div>
           </v-col>
         </v-row>
@@ -245,8 +241,8 @@ export default {
   name: "BuildingPermitPageWithStepper",
   data() {
     return {
-      currentStep: 2,
-      stepperDummy: 2,
+      currentStep: 1,
+      notificationsVisible: false,
       steps: [
         "Fill up the Unified Application Form",
         "Download Filled-up Unified Application Form and Completion Permits",
@@ -260,30 +256,25 @@ export default {
         city: "Legazpi City",
         contactNo: "0917-123-4567",
       },
-      notificationsVisible: false,
+      stepperDummy: 2, // for visual stepper only
     };
   },
   methods: {
     handleLogout() {
       console.log("User logged out");
     },
-    goToQuickGuideStep(index) {
-      if (index === 0) {
-        this.currentStep = 1;
-      } else if (index === 1) {
-        this.currentStep = 2;
-        console.log("Activated step 2: Owner/Applicant");
-      }
+    goToStep(index) {
+      this.currentStep = index;
+    },
+    showNotifications() {
+      this.notificationsVisible = true;
+      console.log("Toggling notifications menu");
     },
     validateAndProceed() {
       this.$router.push("/applicant/OPlocation");
     },
     goBack() {
       this.$router.push("/applicant/OPtype");
-    },
-    showNotifications() {
-      this.notificationsVisible = true;
-      console.log("Toggling notifications menu");
     },
   },
 };
@@ -318,7 +309,6 @@ export default {
 }
 .quick-guide-step {
   transition: background 0.2s, box-shadow 0.2s;
-  cursor: pointer;
 }
 .quick-guide-step:hover {
   background: #e3f0ff !important;
@@ -346,16 +336,25 @@ export default {
   border-radius: 8px !important;
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
+.gradient-text {
+  background: linear-gradient(90deg, #1976d2 20%, #1565c0 80%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .stepper-elevated {
-  padding: 20px 0;
   background: transparent;
+  border-radius: 14px;
   box-shadow: none;
+  padding: 20px 0;
 }
 
 .stepper-item-custom .v-stepper-item__step {
   box-shadow: 0 1px 4px 0 rgba(25, 118, 210, 0.13);
   transition: background 0.2s;
 }
+
 :deep(.v-stepper-item--selected .v-stepper-item__step) {
   background-color: #1976d2 !important;
   color: #fff !important;
