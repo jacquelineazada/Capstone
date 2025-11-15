@@ -1,86 +1,5 @@
 <template>
   <v-app>
-    <v-app-bar flat color="#0000CC" dark height="88" app>
-      <v-toolbar-title class="text-h5 font-weight-bold page-title-gradient">
-        <v-icon color="white" class="mr-2">mdi-office-building</v-icon>
-        Construction Permit Management System
-      </v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-menu
-        v-model="notificationsVisible"
-        :close-on-content-click="false"
-        location="bottom right"
-        max-width="380"
-        :offset="[92, 2]"
-        transition="slide-y-transition"
-        content-class="notification-menu-popover"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn icon class="mr-2" v-bind="props">
-            <v-badge content="2" color="red" dot floating overlap>
-              <v-icon>mdi-bell</v-icon>
-            </v-badge>
-          </v-btn>
-        </template>
-
-        <v-card class="notifications-card pa-0" elevation="12" width="380">
-          <div class="d-flex justify-space-between align-center pa-4">
-            <div class="text-h6 font-weight-bold text-grey-darken-4">Notifications</div>
-            <v-btn icon size="small" variant="text" @click="notificationsVisible = false">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </div>
-
-          <v-divider></v-divider>
-
-          <v-list class="pa-4 list-notifications">
-            <v-card color="green-lighten-5" class="pa-3 mb-4 notification-item" flat>
-              <div class="d-flex align-start">
-                <v-icon color="green-darken-2" class="mr-3 mt-1">mdi-check-circle</v-icon>
-                <div>
-                  <div class="font-weight-bold text-green-darken-4 mb-1">
-                    Application Submitted Successfully
-                  </div>
-                  <div class="text-caption text-grey-darken-1">
-                    Application ID: BP-2025-001
-                    <span class="font-weight-bold ml-1">3 hours ago</span>
-                  </div>
-                  <p class="text-body-2 text-green-darken-4 mt-2">
-                    Your building permit application has been successfully submitted and
-                    is now being processed.
-                  </p>
-                </div>
-              </div>
-            </v-card>
-
-            <v-card color="blue-lighten-5" class="pa-3 notification-item" flat>
-              <div class="d-flex align-start">
-                <v-icon color="info" class="mr-3 mt-1">mdi-information</v-icon>
-                <div>
-                  <div class="font-weight-bold text-blue-darken-4 mb-1">
-                    Building Permit Application Number Assigned
-                  </div>
-                  <div class="text-caption text-grey-darken-1">
-                    Application ID: BP-2025-001
-                    <span class="font-weight-bold ml-1">3 hours ago</span>
-                  </div>
-                  <p class="text-body-2 text-blue-darken-4 mt-2">
-                    Your building permit application number **BP-2025-001** has been
-                    assigned. Please use this number for all future communications.
-                  </p>
-                </div>
-              </div>
-            </v-card>
-          </v-list>
-          <div class="text-center pb-2">
-            <v-btn variant="text" color="primary" size="small"> View All </v-btn>
-          </div>
-        </v-card>
-      </v-menu>
-    </v-app-bar>
-
     <v-main class="no-scroll">
       <v-container fluid class="pa-0 content-area">
         <v-row no-gutters class="fill-height">
@@ -108,7 +27,7 @@
                     'active-step': currentStep === index,
                   }"
                   @click="goToStep(index)"
-                  :elevation="currentStep === index ? 3 : 0"
+                  elevation="currentStep === index ? 3 : 0"
                   style="transition: box-shadow 0.16s, background 0.16s"
                 >
                   <v-avatar
@@ -129,14 +48,15 @@
               <div class="mt-4">
                 <v-btn
                   block
-                  color="blue-darken-3"
-                  variant="flat"
+                  color="primary"
+                  variant="elevated"
                   to="/login"
-                  class="text-capitalize font-weight-bold"
+                  class="font-weight-bold logout-btn-white"
+                  style="font-size: 1.1rem; letter-spacing: 0.02em"
                   @click="handleLogout"
                 >
-                  <v-icon left>mdi-logout</v-icon>
-                  Logout
+                  <v-icon left color="white">mdi-logout</v-icon>
+                  <span style="color: #fff; font-weight: bold">Logout</span>
                 </v-btn>
               </div>
             </v-card>
@@ -172,7 +92,7 @@
                     BUILDING PERMIT NUMBER
                   </div>
                   <div class="text-h5 font-weight-bold text-blue-darken-2">
-                    BP-2025-001
+                    BP-2024-001
                   </div>
                 </v-card>
 
@@ -230,7 +150,7 @@
                       VALIDITY PERIOD
                     </div>
                     <div class="text-body-1 text-grey-darken-3 font-weight-medium">
-                      Valid until March 20, 2026
+                      March 20, 2026
                     </div>
                   </v-col>
                 </v-row>
@@ -361,26 +281,14 @@ export default {
   border-radius: 6px !important;
 }
 
-.action-button-styled {
-  border-radius: 50px !important;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
-  padding: 0 24px !important;
-  height: 48px !important;
-  color: #1976d2 !important;
-  background-color: white !important;
-}
-.notifications-card {
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.list-notifications {
-  overflow-y: auto;
-}
-
-.notification-item {
+.logout-btn-white {
   border-radius: 8px !important;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: #1565c0 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px 0 rgba(25, 118, 210, 0.08);
+  min-height: 48px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
 }
 </style>

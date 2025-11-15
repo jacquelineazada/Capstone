@@ -1,46 +1,5 @@
 <template>
   <v-app>
-    <v-app-bar flat color="#0000CC" dark height="88" app>
-      <v-toolbar-title class="text-h5 font-weight-bold page-title-gradient">
-        <v-icon color="white" class="mr-2">mdi-office-building</v-icon>
-        Construction Permit Management System
-      </v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-menu
-        v-model="notificationsVisible"
-        :close-on-content-click="false"
-        location="bottom right"
-        max-width="380"
-        :offset="[92, 2]"
-        transition="slide-y-transition"
-        content-class="notification-menu-popover"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn icon class="mr-2" v-bind="props">
-            <v-badge content="2" color="red" dot floating overlap>
-              <v-icon>mdi-bell</v-icon>
-            </v-badge>
-          </v-btn>
-        </template>
-
-        <v-card class="notifications-card pa-0" elevation="12" width="380">
-          <div class="d-flex justify-space-between align-center pa-4">
-            <div class="text-h6 font-weight-bold text-grey-darken-4">Notifications</div>
-            <v-btn icon size="small" variant="text" @click="notificationsVisible = false">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </div>
-
-          <v-divider></v-divider>
-          <div class="text-center pb-2">
-            <v-btn variant="text" color="primary" size="small"> View All </v-btn>
-          </div>
-        </v-card>
-      </v-menu>
-    </v-app-bar>
-
     <v-main class="no-scroll">
       <v-container fluid class="pa-0 content-area">
         <v-row no-gutters class="fill-height">
@@ -61,7 +20,6 @@
                   v-for="(step, index) in steps"
                   :key="index"
                   flat
-                  :color="currentStep === index ? 'blue-lighten-5' : '#f6f8fa'"
                   class="d-flex align-center pa-3 mb-4 rounded-lg quick-guide-step"
                   :class="{
                     'active-step': currentStep === index,
@@ -119,7 +77,6 @@
                     class="ml-2"
                     @click="notificationsVisible = true"
                   >
-                    <v-icon>mdi-bell-ring-outline</v-icon>
                   </v-btn>
                 </span>
               </div>
@@ -182,7 +139,7 @@
                     BUILDING PERMIT NUMBER
                   </div>
                   <div class="text-h5 font-weight-bold text-blue-darken-2">
-                    BP-2025-001
+                    BP-2024-001
                   </div>
                 </v-card>
 
@@ -197,7 +154,7 @@
                       <v-icon size="20" class="mr-2" color="grey-darken-1"
                         >mdi-calendar-month</v-icon
                       >
-                      <span class="font-weight-medium">January 15, 2025</span>
+                      <span class="font-weight-medium">January 15, 2024</span>
                     </div>
                   </v-col>
 
@@ -240,7 +197,7 @@
                       VALIDITY PERIOD
                     </div>
                     <div class="text-body-1 text-grey-darken-3 font-weight-medium">
-                      Valid until March 20, 2026
+                      March 20, 2025
                     </div>
                   </v-col>
                 </v-row>
@@ -345,7 +302,7 @@ export default {
           icon: "mdi-check-circle",
           dotColor: "blue",
           chipColor: "green-lighten-1",
-          submittedDate: "January 15, 2025",
+          submittedDate: "May 19, 2025",
         },
         {
           title: "Requirements Checklist Verification",
@@ -442,8 +399,8 @@ export default {
 }
 
 .active-step {
-  background: #e7efff !important;
-  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.12);
+  background: none !important;
+  box-shadow: none !important;
   cursor: default !important;
 }
 .quick-guide-avatar {
@@ -483,20 +440,5 @@ export default {
 }
 .v-timeline-item:deep(.v-timeline-item__body) {
   padding-left: 16px !important;
-}
-
-.notifications-card {
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.list-notifications {
-  overflow-y: auto;
-}
-
-.notification-item {
-  border-radius: 8px !important;
-  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 </style>

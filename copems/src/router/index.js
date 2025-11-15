@@ -38,8 +38,13 @@ const router = createRouter({
         },
         {
           path: "bpinquiry",
-          name: "bpinquiry", 
+          name: "bpinquiry",
           component: () => import("@/pages/opinquiry.vue"), // Using same component for now
+        },
+        {
+          path: "adminLanding",
+          name: "adminLanding",
+          component: () => import("@/pages/adminLanding.vue"),
         },
       ],
     },
@@ -53,7 +58,7 @@ const router = createRouter({
           name: "architecturalDB",
           component: () =>
             import(
-              "@/module/admin/OccupancyPermit/Inspector/architecturalDB.vue"
+              "@/Module/admin/OccupancyPermit/Inspector/architecturalDB.vue"
             ),
         },
         {
@@ -61,7 +66,7 @@ const router = createRouter({
           name: "reportevaluation",
           component: () =>
             import(
-              "@/module/admin/OccupancyPermit/Inspector/reportevaluation.vue"
+              "@/Module/admin/OccupancyPermit/Inspector/reportevaluation.vue"
             ),
         },
         {
@@ -69,55 +74,55 @@ const router = createRouter({
           name: "OccupancyApplications",
           component: () =>
             import(
-              "@/module/admin/OccupancyPermit/TechStaff/OccupancyApplications.vue"
+              "@/Module/admin/OccupancyPermit/TechStaff/OccupancyApplications.vue"
             ),
         },
         {
           path: "OPverified",
           name: "OPverified",
           component: () =>
-            import("@/module/admin/OccupancyPermit/TechStaff/OPverified.vue"),
+            import("@/Module/admin/OccupancyPermit/TechStaff/OPverified.vue"),
         },
         {
           path: "checklistforOP",
           name: "checklistforOP",
           component: () =>
             import(
-              "@/module/admin/OccupancyPermit/administrative/checklistforOP.vue"
+              "@/Module/admin/OccupancyPermit/administrative/checklistforOP.vue"
             ),
         },
         {
           path: "adminDB",
           name: "adminDB",
           component: () =>
-            import("@/module/admin/OccupancyPermit/administrative/adminDB.vue"),
+            import("@/Module/admin/OccupancyPermit/administrative/adminDB.vue"),
         },
         {
           path: "verifiedchecklist",
           name: "verifiedchecklist",
           component: () =>
             import(
-              "@/module/admin/OccupancyPermit/administrative/verifiedchecklist.vue"
+              "@/Module/admin/OccupancyPermit/administrative/verifiedchecklist.vue"
             ),
         },
         {
           path: "OPchecklist",
           name: "OPchecklist",
           component: () =>
-            import("@/module/admin/OccupancyPermit/TechStaff/OPchecklist.vue"),
+            import("@/Module/admin/OccupancyPermit/TechStaff/OPchecklist.vue"),
         },
         {
           path: "chiefDB",
           name: "chiefDB",
           component: () =>
-            import("@/module/admin/OccupancyPermit/ChiefInspector/chiefDB.vue"),
+            import("@/Module/admin/OccupancyPermit/ChiefInspector/chiefDB.vue"),
         },
         {
           path: "ReportViewing",
           name: "ReportViewing",
           component: () =>
             import(
-              "@/module/admin/OccupancyPermit/ChiefInspector/ReportViewing.vue"
+              "@/Module/admin/OccupancyPermit/ChiefInspector/ReportViewing.vue"
             ),
         },
       ],
@@ -133,7 +138,7 @@ const router = createRouter({
           name: "OPapply",
           component: () =>
             import(
-              "@/module/applicant/OccupancyPermit/OccupancyApplication/OPapply.vue"
+              "@/Module/applicant/OccupancyPermit/OccupancyApplication/OPapply.vue"
             ),
         },
         {
@@ -141,7 +146,7 @@ const router = createRouter({
           name: "OPtype",
           component: () =>
             import(
-              "@/module/applicant/OccupancyPermit/OccupancyApplication/OPtype.vue"
+              "@/Module/applicant/OccupancyPermit/OccupancyApplication/OPtype.vue"
             ),
         },
         {
@@ -149,7 +154,7 @@ const router = createRouter({
           name: "OPowner",
           component: () =>
             import(
-              "@/module/applicant/OccupancyPermit/OccupancyApplication/OPowner.vue"
+              "@/Module/applicant/OccupancyPermit/OccupancyApplication/OPowner.vue"
             ),
         },
         {
@@ -157,7 +162,7 @@ const router = createRouter({
           name: "OPlocation",
           component: () =>
             import(
-              "@/module/applicant/OccupancyPermit/OccupancyApplication/OPlocation.vue"
+              "@/Module/applicant/OccupancyPermit/OccupancyApplication/OPlocation.vue"
             ),
         },
         {
@@ -165,7 +170,7 @@ const router = createRouter({
           name: "OPsignatories",
           component: () =>
             import(
-              "@/module/applicant/OccupancyPermit/OccupancyApplication/OPsignatories.vue"
+              "@/Module/applicant/OccupancyPermit/OccupancyApplication/OPsignatories.vue"
             ),
         },
         {
@@ -173,7 +178,7 @@ const router = createRouter({
           name: "FormsSection",
           component: () =>
             import(
-              "@/module/applicant/OccupancyPermit/OccupancyApplication/FormsSection.vue"
+              "@/Module/applicant/OccupancyPermit/OccupancyApplication/FormsSection.vue"
             ),
         },
         {
@@ -181,7 +186,7 @@ const router = createRouter({
           name: "submission",
           component: () =>
             import(
-              "@/module/applicant/OccupancyPermit/MonitoringofApplication/submission.vue"
+              "@/Module/applicant/OccupancyPermit/MonitoringofApplication/submission.vue"
             ),
         },
         {
@@ -189,7 +194,7 @@ const router = createRouter({
           name: "Unified",
           component: () =>
             import(
-              "@/module/applicant/OccupancyPermit/OccupancyPermits/Unified.vue"
+              "@/Module/applicant/OccupancyPermit/OccupancyPermits/Unified.vue"
             ),
         },
         {
@@ -197,7 +202,7 @@ const router = createRouter({
           name: "Completion",
           component: () =>
             import(
-              "@/module/applicant/OccupancyPermit/OccupancyPermits/Completion.vue"
+              "@/Module/applicant/OccupancyPermit/OccupancyPermits/Completion.vue"
             ),
         },
         {
@@ -205,7 +210,7 @@ const router = createRouter({
           name: "Electrical",
           component: () =>
             import(
-              "@/module/applicant/OccupancyPermit/OccupancyPermits/Electrical.vue"
+              "@/Module/applicant/OccupancyPermit/OccupancyPermits/Electrical.vue"
             ),
         },
       ],

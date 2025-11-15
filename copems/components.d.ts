@@ -12,6 +12,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AdminHeader: typeof import('./src/components/AdminHeader.vue')['default']
+    AnimatedLoader: typeof import('./src/components/AnimatedLoader.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     ApplicantHeader: typeof import('./src/components/ApplicantHeader.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
