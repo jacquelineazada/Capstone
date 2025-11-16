@@ -385,12 +385,488 @@
           </div>
         </v-card>
 
-        <v-row no-gutters class="d-flex justify-space-between mt-4 no-print">
-          <v-btn color="success" @click="downloadPDF">Download Form</v-btn>
-          <div>
-            <v-btn color="primary" to="/applicant/SelectCompletionForms">Save</v-btn>
+        <!-- PAGE 2: Blank for now -->
+        <v-card class="pa-6 printable-form mt-8" style="min-height: 1200px">
+          <div class="text-center mb-4">
+            <div class="text-subtitle-2" style="font-weight: bold; font-size: 16px">
+              DESIGN PROFESSIONALS, PLANS AND SPECIFICATIONS:
+            </div>
           </div>
-        </v-row>
+          <div class="d-flex" style="gap: 16px">
+            <!-- Architectural -->
+            <div style="flex: 1; border: 2px solid #222">
+              <div
+                style="
+                  border-bottom: 2px solid #222;
+                  padding: 4px 8px;
+                  font-weight: bold;
+                  font-size: 15px;
+                "
+              >
+                ARCHITECTURAL
+              </div>
+              <div style="padding: 8px 8px 0 8px">
+                <div class="d-flex align-center" style="margin-bottom: 8px">
+                  <div style="flex: 1; border-bottom: 1px solid #222; height: 18px"></div>
+                  <div style="margin-left: 8px">
+                    Date<span
+                      style="
+                        border-bottom: 1px solid #222;
+                        min-width: 70px;
+                        display: inline-block;
+                        height: 16px;
+                        vertical-align: middle;
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div class="text-center" style="font-size: 13px; margin-bottom: 8px">
+                  (Signature Over Printed Name)
+                </div>
+                <table style="width: 100%; font-size: 13px; border-collapse: collapse">
+                  <tr>
+                    <td style="border: 1px solid #222; width: 30%; padding: 2px 4px">
+                      Address
+                    </td>
+                    <td style="border: 1px solid #222" colspan="2"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PRC. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Validity</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">IAPOA No.</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">O.R. No.</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued:</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PTR. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Issued at</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">TIN</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <!-- Civil/Structural -->
+            <div style="flex: 1; border: 2px solid #222">
+              <div
+                style="
+                  border-bottom: 2px solid #222;
+                  padding: 4px 8px;
+                  font-weight: bold;
+                  font-size: 15px;
+                "
+              >
+                CIVIL / STRUCTURAL
+              </div>
+              <div style="padding: 8px 8px 0 8px">
+                <div class="d-flex align-center" style="margin-bottom: 8px">
+                  <div style="flex: 1; border-bottom: 1px solid #222; height: 18px"></div>
+                  <div style="margin-left: 8px">
+                    Date<span
+                      style="
+                        border-bottom: 1px solid #222;
+                        min-width: 70px;
+                        display: inline-block;
+                        height: 16px;
+                        vertical-align: middle;
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div class="text-center" style="font-size: 13px; margin-bottom: 8px">
+                  (Signature Over Printed Name)
+                </div>
+                <table style="width: 100%; font-size: 13px; border-collapse: collapse">
+                  <tr>
+                    <td style="border: 1px solid #222; width: 30%; padding: 2px 4px">
+                      Address
+                    </td>
+                    <td style="border: 1px solid #222" colspan="2"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PRC. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Validity</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PTR. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Issued at</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">TIN</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="d-flex" style="gap: 16px">
+            <!-- ELECTRICAL -->
+            <div style="flex: 1; border: 2px solid #222">
+              <div
+                style="
+                  border-bottom: 2px solid #222;
+                  padding: 4px 8px;
+                  font-weight: bold;
+                  font-size: 15px;
+                "
+              >
+                ELECTRICAL
+              </div>
+              <div style="padding: 8px 8px 0 8px">
+                <div class="d-flex align-center" style="margin-bottom: 8px">
+                  <div style="flex: 1; border-bottom: 1px solid #222; height: 18px"></div>
+                  <div style="margin-left: 8px">
+                    Date<span
+                      style="
+                        border-bottom: 1px solid #222;
+                        min-width: 70px;
+                        display: inline-block;
+                        height: 16px;
+                        vertical-align: middle;
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div class="text-center" style="font-size: 13px; margin-bottom: 8px">
+                  (Signature Over Printed Name)
+                </div>
+                <table style="width: 100%; font-size: 13px; border-collapse: collapse">
+                  <tr>
+                    <td style="border: 1px solid #222; width: 30%; padding: 2px 4px">
+                      Address
+                    </td>
+                    <td style="border: 1px solid #222" colspan="2"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PRC. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Validity</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PTR. No.</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">O.R. No.</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued:</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PTR. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Issued at</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">TIN</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <!-- MECHANICAL -->
+            <div style="flex: 1; border: 2px solid #222">
+              <div
+                style="
+                  border-bottom: 2px solid #222;
+                  padding: 4px 8px;
+                  font-weight: bold;
+                  font-size: 15px;
+                "
+              >
+                MECHANICAL
+              </div>
+              <div style="padding: 8px 8px 0 8px">
+                <div class="d-flex align-center" style="margin-bottom: 8px">
+                  <div style="flex: 1; border-bottom: 1px solid #222; height: 18px"></div>
+                  <div style="margin-left: 8px">
+                    Date<span
+                      style="
+                        border-bottom: 1px solid #222;
+                        min-width: 70px;
+                        display: inline-block;
+                        height: 16px;
+                        vertical-align: middle;
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div class="text-center" style="font-size: 13px; margin-bottom: 8px">
+                  (Signature Over Printed Name)
+                </div>
+                <table style="width: 100%; font-size: 13px; border-collapse: collapse">
+                  <tr>
+                    <td style="border: 1px solid #222; width: 30%; padding: 2px 4px">
+                      Address
+                    </td>
+                    <td style="border: 1px solid #222" colspan="2"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PRC. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Validity</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PTR. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Issued at</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">TIN</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="d-flex" style="gap: 16px">
+            <div style="flex: 1; border: 2px solid #222">
+              <div
+                style="
+                  border-bottom: 2px solid #222;
+                  padding: 4px 8px;
+                  font-weight: bold;
+                  font-size: 15px;
+                "
+              >
+                SANITARY
+              </div>
+              <div style="padding: 8px 8px 0 8px">
+                <div class="d-flex align-center" style="margin-bottom: 8px">
+                  <div style="flex: 1; border-bottom: 1px solid #222; height: 18px"></div>
+                  <div style="margin-left: 8px">
+                    Date<span
+                      style="
+                        border-bottom: 1px solid #222;
+                        min-width: 70px;
+                        display: inline-block;
+                        height: 16px;
+                        vertical-align: middle;
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div class="text-center" style="font-size: 13px; margin-bottom: 8px">
+                  (Signature Over Printed Name)
+                </div>
+                <table style="width: 100%; font-size: 13px; border-collapse: collapse">
+                  <tr>
+                    <td style="border: 1px solid #222; width: 30%; padding: 2px 4px">
+                      Address
+                    </td>
+                    <td style="border: 1px solid #222" colspan="2"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PRC. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Validity</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">IAPOA No.</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">O.R. No.</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued:</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PTR. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Issued at</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">TIN</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div style="flex: 1; border: 2px solid #222">
+              <div
+                style="
+                  border-bottom: 2px solid #222;
+                  padding: 4px 8px;
+                  font-weight: bold;
+                  font-size: 15px;
+                "
+              >
+                PLUMBING
+              </div>
+              <div style="padding: 8px 8px 0 8px">
+                <div class="d-flex align-center" style="margin-bottom: 8px">
+                  <div style="flex: 1; border-bottom: 1px solid #222; height: 18px"></div>
+                  <div style="margin-left: 8px">
+                    Date<span
+                      style="
+                        border-bottom: 1px solid #222;
+                        min-width: 70px;
+                        display: inline-block;
+                        height: 16px;
+                        vertical-align: middle;
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div class="text-center" style="font-size: 13px; margin-bottom: 8px">
+                  (Signature Over Printed Name)
+                </div>
+                <table style="width: 100%; font-size: 13px; border-collapse: collapse">
+                  <tr>
+                    <td style="border: 1px solid #222; width: 30%; padding: 2px 4px">
+                      Address
+                    </td>
+                    <td style="border: 1px solid #222" colspan="2"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PRC. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Validity</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PTR. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Issued at</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">TIN</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="d-flex" style="gap: 16px">
+            <!-- ELECTRONICS -->
+            <div style="flex: 1; border: 2px solid #222">
+              <div
+                style="
+                  border-bottom: 2px solid #222;
+                  padding: 4px 8px;
+                  font-weight: bold;
+                  font-size: 15px;
+                "
+              >
+                ELECTRONICS
+              </div>
+              <div style="padding: 8px 8px 0 8px">
+                <div class="d-flex align-center" style="margin-bottom: 8px">
+                  <div style="flex: 1; border-bottom: 1px solid #222; height: 18px"></div>
+                  <div style="margin-left: 8px">
+                    Date<span
+                      style="
+                        border-bottom: 1px solid #222;
+                        min-width: 70px;
+                        display: inline-block;
+                        height: 16px;
+                        vertical-align: middle;
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div class="text-center" style="font-size: 13px; margin-bottom: 8px">
+                  (Signature Over Printed Name)
+                </div>
+                <table style="width: 100%; font-size: 13px; border-collapse: collapse">
+                  <tr>
+                    <td style="border: 1px solid #222; width: 30%; padding: 2px 4px">
+                      Address
+                    </td>
+                    <td style="border: 1px solid #222" colspan="2"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PRC. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Validity</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PTR. No.</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">O.R. No.</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued:</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PTR. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Issued at</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">TIN</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <!-- INTERIOR DESIGN -->
+            <div style="flex: 1; border: 2px solid #222">
+              <div
+                style="
+                  border-bottom: 2px solid #222;
+                  padding: 4px 8px;
+                  font-weight: bold;
+                  font-size: 15px;
+                "
+              >
+                INTERIOR DESIGN
+              </div>
+              <div style="padding: 8px 8px 0 8px">
+                <div class="d-flex align-center" style="margin-bottom: 8px">
+                  <div style="flex: 1; border-bottom: 1px solid #222; height: 18px"></div>
+                  <div style="margin-left: 8px">
+                    Date<span
+                      style="
+                        border-bottom: 1px solid #222;
+                        min-width: 70px;
+                        display: inline-block;
+                        height: 16px;
+                        vertical-align: middle;
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div class="text-center" style="font-size: 13px; margin-bottom: 8px">
+                  (Signature Over Printed Name)
+                </div>
+                <table style="width: 100%; font-size: 13px; border-collapse: collapse">
+                  <tr>
+                    <td style="border: 1px solid #222; width: 30%; padding: 2px 4px">
+                      Address
+                    </td>
+                    <td style="border: 1px solid #222" colspan="2"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PRC. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Validity</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">PTR. No</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Date Issued</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid #222; padding: 2px 4px">Issued at</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px">TIN</td>
+                    <td style="border: 1px solid #222; padding: 2px 4px"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mb-4">
+            <div class="text-subtitle-2" style="font-weight: bold; font-size: 16px">
+              SUPERVISORS OF SPECIALTY WORKS:
+            </div>
+          </div>
+        </v-card>
       </v-container>
     </v-main>
   </v-app>

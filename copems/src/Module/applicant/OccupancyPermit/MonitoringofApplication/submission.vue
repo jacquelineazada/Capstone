@@ -46,14 +46,14 @@
               <div class="mt-4">
                 <v-btn
                   block
-                  color="blue-darken-3"
+                  color="white"
                   variant="flat"
                   to="/login"
-                  class="text-capitalize font-weight-bold"
+                  class="text-capitalize font-weight-bold logout-btn-white"
                   @click="handleLogout"
                 >
-                  <v-icon left>mdi-logout</v-icon>
-                  Logout
+                  <v-icon left color="black">mdi-logout</v-icon>
+                  <span style="color: #222; font-weight: bold">Logout</span>
                 </v-btn>
               </div>
             </v-card>
@@ -121,7 +121,7 @@
                   </h2>
                 </div>
                 <v-chip
-                  color="blue-darken-1"
+                  color="green lighten-4"
                   variant="flat"
                   size="small"
                   class="font-weight-bold"
