@@ -633,9 +633,21 @@ export default defineComponent({
 .content-area {
   flex: 1;
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.content-area::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 .main-content-bg {
   background: #fafdff;
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none; /* Firefox */
+}
+
+.main-content-bg::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 
 .quick-guide-card {

@@ -25,6 +25,16 @@ const router = createRouter({
       name: "bpinquiry",
       component: () => import("@/pages/bpinquiry.vue"),
     },
+        {
+      path: "/userprofile",
+      name: "userprofile",
+      component: () => import("@/pages/userprofile.vue"),
+    },
+            {
+      path: "/usermanagement",
+      name: "usermanagement",
+      component: () => import("@/pages/usermanagement.vue"),
+    },
 
     // Admin
     {
@@ -35,6 +45,10 @@ const router = createRouter({
         { path: "plans", name: "plans", component: () => import("@/module/admin/Evaluators/plans.vue")},
         { path: "evaluationplan", name: "evaluationplan", component: () => import("@/module/admin/Evaluators/evaluationplan.vue")},
         { path: "buildingofficial", name: "buildingofficial", component: () => import("@/module/admin/Head/buildingofficial.vue")},
+        { path: "approvedplans", name: "approvedplans", component: () => import("@/module/admin/Administrative/approvedplans.vue")},
+        { path: "approvedlist", name: "approvedlist", component: () => import("@/module/admin/Administrative/approvedlist.vue")},
+
+
       ],
     },
 

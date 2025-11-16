@@ -104,7 +104,7 @@
                   </v-list-item-subtitle>
                 </v-list-item>
 
-                <v-list-item link to="/profile" class="mt-1">
+                <v-list-item link @click="goToUserProfile" class="mt-1">
                   <template v-slot:prepend>
                     <v-icon>mdi-account-outline</v-icon>
                   </template>
@@ -411,6 +411,10 @@ const getStatusColor = (status) => {
 
 const closeNotifications = () => {
   console.log("Notifications closed or marked as read.");
+};
+
+const goToUserProfile = () => {
+  router.push("/userprofile");
 };
 
 const logout = () => {

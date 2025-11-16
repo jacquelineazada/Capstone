@@ -108,7 +108,7 @@
                   </v-list-item-subtitle>
                 </v-list-item>
 
-                <v-list-item link to="/profile" class="mt-1">
+                <v-list-item link @click="goToUserProfile" class="mt-1">
                   <template v-slot:prepend>
                     <v-icon>mdi-account</v-icon>
                   </template>
@@ -451,6 +451,11 @@ function onClick() {
     loading.value = false;
   }, 2000);
 }
+
+const goToUserProfile = () => {
+  router.push("/userprofile");
+};
+
 const getStatusColor = (status) => {
   if (status === "Verified") return "success";
   if (status === "Pending") return "warning";

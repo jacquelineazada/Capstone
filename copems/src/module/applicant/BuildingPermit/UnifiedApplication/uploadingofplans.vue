@@ -3,67 +3,12 @@
     <v-main class="no-scroll">
       <v-container fluid class="pa-0 content-area fill-height">
         <v-row no-gutters class="fill-height">
-          <v-col cols="12" md="3" class="pa-0">
-            <v-card
-              flat
-              class="pa-4 quick-guide-card d-flex flex-column justify-space-between elevation-2"
-              style="
-                border-right: 1px solid #e0e0e0;
-                height: 100%;
-                background: #fcfcff;
-              "
-            >
-              <div>
-                <h4 class="mb-2 text-h5 font-weight-bold text-blue-darken-3">
-                  Building Permit Application
-                </h4>
-                <div class="text-subtitle-2 mb-6 text-blue-grey-darken-1">
-                  Follow these steps to complete your application
-                </div>
-                <v-card
-                  v-for="(step, index) in sidebarSteps"
-                  :key="index"
-                  flat
-                  :color="sidebarStep === index ? 'blue-lighten-5' : '#f6f8fa'"
-                  class="d-flex align-center pa-3 mb-4 rounded-lg quick-guide-step"
-                  :class="{
-                    'clickable-step': true,
-                    'active-step': sidebarStep === index,
-                  }"
-                  @click="goToSidebarStep(index)"
-                  elevation="sidebarStep === index ? 2 : 0"
-                  style="transition: box-shadow 0.16s, background 0.16s"
-                >
-                  <v-avatar
-                    :color="sidebarStep === index ? 'primary' : '#2563EB'"
-                    size="36"
-                    class="white--text mr-3 quick-guide-avatar"
-                  >
-                    <span class="text-h6 font-weight-bold">
-                      {{ index + 1 }}
-                    </span>
-                  </v-avatar>
-                  <div class="font-weight-bold text-body-1 step-label">
-                    {{ step }}
-                  </div>
-                </v-card>
-              </div>
-              <v-spacer></v-spacer>
-              <div class="mt-4">
-                <v-btn
-                  block
-                  color="white"
-                  outlined
-                  to="/login"
-                  class="text-capitalize font-weight-bold"
-                  @click="handleLogout"
-                >
-                  <v-icon left>mdi-logout</v-icon>
-                  Logout
-                </v-btn>
-              </div>
-            </v-card>
-          </v-col>
+          <ApplicantNavigation
+            :sidebar-step="activeStep"
+            :sidebar-steps="sidebarSteps"
+            @go-to-step="handleStepChange"
+            @logout="handleLogout"
+          />
 
           <v-col cols="12" md="9" class="main-content-bg pa-6">
             <v-container fluid>
@@ -176,8 +121,7 @@
                       elevation="2"
                       @click="submitAllPlans"
                     >
-                      <v-icon start>mdi-upload</v-icon>
-                      Submit All Plans
+                      Submit
                     </v-btn>
                   </v-col>
                 </v-row>
@@ -188,28 +132,37 @@
       </v-container>
     </v-main>
 
-    <v-dialog v-model="showSuccessDialog" max-width="400">
-      <v-card class="pa-4 text-center rounded-xl" elevation="10">
-        <div class="d-flex justify-center my-4">
+    <v-dialog
+      v-model="showSuccessDialog"
+      max-width="450"
+      style="min-height: 600px"
+    >
+      <v-card
+        class="pa-6 text-center rounded-xl"
+        elevation="10"
+        style="min-height: 600px"
+      >
+        <div class="d-flex justify-center mb-4">
           <v-icon color="green-lighten-1" size="80">
             mdi-check-circle-outline
           </v-icon>
         </div>
 
-        <v-card-title class="text-h5 font-weight-bold text-wrap mb-2">
+        <v-card-title class="text-h5 font-weight-bold text-wrap mb-4">
           Submitted Successfully
         </v-card-title>
-        <v-card-text class="text-subtitle-1 text-grey-darken-1">
+        <v-card-text class="text-subtitle-1 text-grey-darken-1 mb-6">
           Your building plans have been submitted for review. You will be
           notified of the next steps.
         </v-card-text>
-        <v-card-actions class="justify-center pt-4 pb-2">
+        <v-card-actions class="justify-center pt-4">
           <v-btn
             color="#0000CC"
             class="text-none rounded-pill px-8"
             @click="closeSuccessDialog"
             to="/applicantlayout/selectancillary"
             elevation="2"
+            variant="elevated"
           >
             Continue
           </v-btn>
@@ -221,9 +174,19 @@
 
 <script setup>
 import { ref, nextTick } from "vue";
-import { useRouter } from "vue-router";
+import ApplicantNavigation from "./ApplicantNavigation.vue";
 
-//
+// useRouter is auto-imported by unplugin-auto-import
+
+// Sidebar navigation
+const activeStep = ref(1);
+const sidebarSteps = ref([
+  "Fill up the Unified Application Form",
+  "Upload Building Plans & Lot Plans",
+  "Download Filled-up Unified Application Form and Required Ancillary Permits ",
+]);
+
+// Plan uploads data
 const planUploads = ref([
   {
     title: "Architectural Plans",
@@ -257,10 +220,12 @@ const planUploads = ref([
   },
 ]);
 
+// File upload state
 const uploadedFiles = ref(new Array(planUploads.value.length).fill(null));
 const showSuccessDialog = ref(false);
 const fileInputs = ref([]);
 
+// File upload handlers
 const handleFileUpload = (index, file) => {
   if (file && file[0]) {
     uploadedFiles.value[index] = file[0];
@@ -295,25 +260,16 @@ const triggerFileInput = (i) => {
   });
 };
 
-const router = useRouter();
-const sidebarStep = ref(1);
-const sidebarSteps = ref([
-  "Fill up the Unified Application Form",
-  "Upload Building Plans & Lot Plans",
-  "Download Filled-up Unified Application Form and Required Ancillary Permits ",
-]);
-
+// Navigation handlers
 const handleLogout = () => {
   console.log("User logged out");
   router.push("/login");
 };
 
-const goToSidebarStep = (index) => {
-  sidebarStep.value = index;
+const handleStepChange = (index) => {
+  activeStep.value = index;
   if (index === 0) {
     router.push("/applicant/applicantdetails");
-  } else if (index === 1) {
-  } else if (index === 2) {
   }
 };
 </script>
@@ -330,10 +286,21 @@ const goToSidebarStep = (index) => {
 }
 .content-area {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+}
+.content-area .v-row {
+  width: 100%;
 }
 .main-content-bg {
   background: #fafdff;
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none; /* Firefox */
+}
+
+.main-content-bg::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 
 .quick-guide-card {
@@ -364,6 +331,7 @@ const goToSidebarStep = (index) => {
 
 .gradient-text {
   background: linear-gradient(90deg, #1976d2 10%, #0000cc 90%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

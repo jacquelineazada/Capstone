@@ -3,67 +3,12 @@
     <v-main class="no-scroll">
       <v-container fluid class="pa-0 content-area fill-height">
         <v-row no-gutters class="fill-height">
-          <v-col cols="12" md="3" class="pa-0">
-            <v-card
-              flat
-              class="pa-4 quick-guide-card d-flex flex-column justify-space-between elevation-2"
-              style="
-                border-right: 1px solid #e0e0e0;
-                height: 100%;
-                background: #fcfcff;
-              "
-            >
-              <div>
-                <h4 class="mb-2 text-h5 font-weight-bold text-blue-darken-3">
-                  Building Permit Application
-                </h4>
-                <div class="text-subtitle-2 mb-6 text-blue-grey-darken-1">
-                  Follow these steps to complete your application
-                </div>
-                <v-card
-                  v-for="(step, index) in sidebarSteps"
-                  :key="index"
-                  flat
-                  :color="sidebarStep === index ? 'blue-lighten-5' : '#f6f8fa'"
-                  class="d-flex align-center pa-3 mb-4 rounded-lg quick-guide-step"
-                  :class="{
-                    'clickable-step': true,
-                    'active-step': sidebarStep === index,
-                  }"
-                  @click="goToSidebarStep(index)"
-                  elevation="sidebarStep === index ? 2 : 0"
-                  style="transition: box-shadow 0.16s, background 0.16s"
-                >
-                  <v-avatar
-                    :color="sidebarStep === index ? 'primary' : '#2563EB'"
-                    size="36"
-                    class="white--text mr-3 quick-guide-avatar"
-                  >
-                    <span class="text-h6 font-weight-bold">
-                      {{ index + 1 }}
-                    </span>
-                  </v-avatar>
-                  <div class="font-weight-bold text-body-1 step-label">
-                    {{ step }}
-                  </div>
-                </v-card>
-              </div>
-              <v-spacer></v-spacer>
-              <div class="mt-4">
-                <v-btn
-                  block
-                  color="white"
-                  outlined
-                  to="/login"
-                  class="text-capitalize font-weight-bold"
-                  @click="handleLogout"
-                >
-                  <v-icon left>mdi-logout</v-icon>
-                  Logout
-                </v-btn>
-              </div>
-            </v-card>
-          </v-col>
+          <ApplicantNavigation
+            :sidebar-step="activeStep"
+            :sidebar-steps="stepLabels"
+            @go-to-step="handleStepChange"
+            @logout="handleLogout"
+          />
 
           <v-col cols="12" md="9" class="main-content-bg pa-6">
             <v-container fluid style="max-width: 1400px">
@@ -166,10 +111,11 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import ApplicantNavigation from "./ApplicantNavigation.vue";
 
 const router = useRouter();
-const sidebarStep = ref(2);
-const sidebarSteps = ref([
+const activeStep = ref(2);
+const stepLabels = ref([
   "Fill up the Unified Application Form",
   "Upload Building Plans & Lot Plans",
   "Download Filled-up Unified Application Form and Required Ancillary Permits ",
@@ -180,8 +126,8 @@ const handleLogout = () => {
   router.push("/login");
 };
 
-const goToSidebarStep = (index) => {
-  sidebarStep.value = index;
+const handleStepChange = (index) => {
+  activeStep.value = index;
   if (index === 0) {
     router.push("/applicant/applicantdetails");
   } else if (index === 2) {
@@ -268,10 +214,21 @@ function downloadForm(title) {
 }
 .content-area {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+}
+.content-area .v-row {
+  width: 100%;
 }
 .main-content-bg {
   background: #fafdff;
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none; /* Firefox */
+}
+
+.main-content-bg::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 .quick-guide-card {
   min-height: 100%;

@@ -21,7 +21,6 @@
                 );
               "
             >
-            
               <div>
                 <h1
                   class="font-weight-bold mb-2 process-title"
@@ -438,10 +437,20 @@ export default {
   flex: 1;
   overflow-y: auto;
   padding-bottom: 24px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.content-area::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 .main-content-bg {
   background: linear-gradient(90deg, #fafdff 70%, #f3f7ff 100%);
   border-radius: 0 24px 24px 0;
+  scrollbar-width: none; /* Firefox */
+}
+
+.main-content-bg::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 
 .quick-guide-card {

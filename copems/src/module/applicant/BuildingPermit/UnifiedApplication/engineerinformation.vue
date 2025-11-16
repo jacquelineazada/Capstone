@@ -3,67 +3,12 @@
     <v-main class="no-scroll">
       <v-container fluid class="pa-0 content-area fill-height">
         <v-row no-gutters class="fill-height">
-          <v-col cols="12" md="3" class="pa-0">
-            <v-card
-              flat
-              class="pa-4 quick-guide-card d-flex flex-column justify-space-between elevation-2"
-              style="
-                border-right: 1px solid #e0e0e0;
-                height: 100%;
-                background: #fcfcff;
-              "
-            >
-              <div>
-                <h4 class="mb-2 text-h5 font-weight-bold text-blue-darken-3">
-                  Building Permit Application
-                </h4>
-                <div class="text-subtitle-2 mb-6 text-blue-grey-darken-1">
-                  Follow these steps to complete your application
-                </div>
-                <v-card
-                  v-for="(step, index) in sidebarSteps"
-                  :key="index"
-                  flat
-                  :color="sidebarStep === index ? 'blue-lighten-5' : '#f6f8fa'"
-                  class="d-flex align-center pa-3 mb-4 rounded-lg quick-guide-step"
-                  :class="{
-                    'clickable-step': index === 0,
-                    'active-step': sidebarStep === index,
-                  }"
-                  @click="goToSidebarStep(index)"
-                  elevation="sidebarStep === index ? 2 : 0"
-                  style="transition: box-shadow 0.16s, background 0.16s"
-                >
-                  <v-avatar
-                    :color="sidebarStep === index ? 'primary' : '#2563EB'"
-                    size="36"
-                    class="white--text mr-3 quick-guide-avatar"
-                  >
-                    <span class="text-h6 font-weight-bold">
-                      {{ index + 1 }}
-                    </span>
-                  </v-avatar>
-                  <div class="font-weight-bold text-body-1 step-label">
-                    {{ step }}
-                  </div>
-                </v-card>
-              </div>
-              <v-spacer></v-spacer>
-              <div class="mt-4">
-                <v-btn
-                  block
-                  color="white"
-                  outlined
-                  to="/login"
-                  class="text-capitalize font-weight-bold"
-                  @click="handleLogout"
-                >
-                  <v-icon left>mdi-logout</v-icon>
-                  Logout
-                </v-btn>
-              </div>
-            </v-card>
-          </v-col>
+          <ApplicantNavigation
+            :sidebar-step="sidebarStep"
+            :sidebar-steps="sidebarSteps"
+            @go-to-step="goToSidebarStep"
+            @logout="handleLogout"
+          />
 
           <v-col cols="12" md="9" class="main-content-bg pa-6">
             <v-container fluid class="px-4 mx-auto" style="max-width: 1300px">
@@ -748,10 +693,10 @@
                   color="blue-darken-3"
                   class="btn-rounded"
                   elevation="2"
-                  to="/applicant/uploadingofplans"
                   variant="elevated"
+                  @click="submitApplication"
                 >
-                  Next<v-icon right>mdi-arrow-right</v-icon>
+                  Submit<v-icon right>mdi-check</v-icon>
                 </v-btn>
               </div>
             </v-container>
@@ -759,15 +704,74 @@
         </v-row>
       </v-container>
     </v-main>
+
+    <!-- Application Number Dialog -->
+    <v-dialog
+      v-model="showApplicationNumberDialog"
+      max-width="450"
+      style="min-height: 600px"
+    >
+      <v-card
+        class="pa-6 text-center rounded-xl"
+        elevation="10"
+        style="min-height: 600px"
+      >
+        <div class="d-flex justify-center mb-4">
+          <v-icon color="green-lighten-1" size="80">
+            mdi-check-circle-outline
+          </v-icon>
+        </div>
+
+        <v-card-title class="text-h5 font-weight-bold text-wrap mb-4">
+          Application Submitted Successfully
+        </v-card-title>
+
+        <v-card-text class="text-subtitle-1 text-grey-darken-1 mb-6">
+          Your building permit application has been submitted. Here is your
+          application reference number:
+        </v-card-text>
+
+        <v-card class="pa-6 mb-6 application-number-card" outlined>
+          <div
+            class="text-h4 font-weight-bold"
+            style="color: #0000cc; letter-spacing: 2px"
+          >
+            {{ generatedApplicationNumber }}
+          </div>
+          <div class="text-caption text-grey-darken-2 mt-2">
+            Application Reference Number
+          </div>
+        </v-card>
+
+        <v-card-text class="text-body-2 text-grey mb-6">
+          Please save this number for your records. You will use it to track
+          your application status.
+        </v-card-text>
+
+        <v-card-actions class="justify-center pt-4">
+          <v-btn
+            color="#0000CC"
+            class="text-none rounded-pill px-8"
+            @click="closeApplicationDialog"
+            elevation="2"
+            variant="elevated"
+          >
+            Continue
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
+import ApplicantNavigation from "./ApplicantNavigation.vue";
 
 export default defineComponent({
   name: "BuildingPermitStep4",
+  components: { ApplicantNavigation },
   setup() {
     const router = useRouter();
     return { router };
@@ -866,12 +870,14 @@ export default defineComponent({
           "TIN should be in XXX-XXX-XXX-XXX format.",
       },
 
-      sidebarStep: 0,
+      sidebarStep: 3,
       sidebarSteps: [
         "Fill up the Unified Application Form",
         "Upload Building Plans & Lot Plans",
         "Download Filled-up Unified Application Form and Required Ancillary Permits ",
       ],
+      showApplicationNumberDialog: false,
+      generatedApplicationNumber: "",
     };
   },
 
@@ -953,6 +959,19 @@ export default defineComponent({
         this.router.push("/applicant/applicantdetails");
       }
     },
+    submitApplication() {
+      // Generate application number
+      const timestamp = Date.now().toString().slice(-6);
+      const randomNum = Math.floor(Math.random() * 10000)
+        .toString()
+        .padStart(4, "0");
+      this.generatedApplicationNumber = `BP-${new Date().getFullYear()}-${timestamp}${randomNum}`;
+      this.showApplicationNumberDialog = true;
+    },
+    closeApplicationDialog() {
+      this.showApplicationNumberDialog = false;
+      this.router.push("/applicantlayout/uploadingofplans");
+    },
   },
 });
 </script>
@@ -969,10 +988,21 @@ export default defineComponent({
 }
 .content-area {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+}
+.content-area .v-row {
+  width: 100%;
 }
 .main-content-bg {
   background: #fafdff;
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none; /* Firefox */
+}
+
+.main-content-bg::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 
 .quick-guide-card {

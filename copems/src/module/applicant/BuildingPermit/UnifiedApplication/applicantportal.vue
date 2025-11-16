@@ -149,10 +149,14 @@
               <div class="mt-4">
                 <v-btn
                   block
-                  color="blue-darken-3"
+                  color="
+                        formStepValue >= step.value
+                          ? 'blue-darken-1'
+                          : 'grey lighten-2'
+                      "
                   variant="flat"
                   to="/login"
-                  class="text-capitalize font-weight-bold"
+                  class="stepper-item-custom  "
                   @click="handleLogout"
                 >
                   <v-icon left>mdi-logout</v-icon>

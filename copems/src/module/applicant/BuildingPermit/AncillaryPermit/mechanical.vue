@@ -1,10 +1,20 @@
 <template>
   <v-app>
-    <v-app-bar flat color="#0000CC" dark height="88" app> </v-app-bar>
-
     <v-main class="bg-grey-lighten-3">
-      <v-container fluid class="px-4 mx-auto a4-container">
-        <v-card class="my-2 pa-4">
+      <v-container fluid class="px-4 mx-auto" style="max-width: 900px">
+        <div class="mb-4">
+          <v-btn
+            color="#0000CC"
+            class="text-none rounded-pill"
+            elevation="2"
+            @click="downloadForm"
+            variant="elevated"
+          >
+            <v-icon start>mdi-download</v-icon>
+            Download Form (PDF)
+          </v-btn>
+        </div>
+        <v-card class="my-2 pa-4 a4-paper">
           <v-card-text>
             <div id="mechanical-permit-form-page-1">
               <div class="header-section">
@@ -695,12 +705,45 @@
 <script>
 export default {
   name: "MechanicalPermitForm",
+  methods: {
+    downloadForm() {
+      window.print();
+    },
+  },
 };
 </script>
 
 <style scoped>
 .a4-container {
   max-width: 1100px;
+}
+
+.a4-paper {
+  width: 210mm;
+  height: 297mm;
+  margin: 0 auto;
+  padding: 20mm !important;
+  box-shadow: 0 0 0 1px #ddd;
+  background: white;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  .mb-4 {
+    display: none !important;
+  }
+  .a4-paper {
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+    page-break-after: always;
+    margin: 0;
+    padding: 20mm !important;
+  }
 }
 #mechanical-permit-form-page-1,
 #civil-structural-permit-form-page-2 {

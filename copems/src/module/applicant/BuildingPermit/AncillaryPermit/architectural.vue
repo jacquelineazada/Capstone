@@ -1,10 +1,20 @@
 <template>
   <v-app>
-    <v-app-bar flat color="#0000CC" dark height="88" app> </v-app-bar>
-
     <v-main class="bg-grey-lighten-3">
-      <v-container fluid class="px-4 mx-auto a4-container">
-        <v-card class="my-2 pa-4">
+      <v-container fluid class="px-4 mx-auto" style="max-width: 900px">
+        <div class="mb-4">
+          <v-btn
+            color="#0000CC"
+            class="text-none rounded-pill"
+            elevation="2"
+            @click="downloadForm"
+            variant="elevated"
+          >
+            <v-icon start>mdi-download</v-icon>
+            Download Form (PDF)
+          </v-btn>
+        </div>
+        <v-card class="my-2 pa-4 a4-paper">
           <v-card-text>
             <div id="architectural-permit-form-page-1">
               <div class="header-section">
@@ -561,7 +571,7 @@
           </v-card-text>
         </v-card>
 
-        <v-card class="my-4 pa-4">
+        <v-card class="my-4 pa-4 a4-paper">
           <v-card-text>
             <div id="architectural-permit-form-page-2">
               <p class="processing-division-header">
@@ -771,28 +781,72 @@
 <script>
 export default {
   name: "BuildingPermitForm",
+  methods: {
+    downloadForm() {
+      window.print();
+    },
+  },
 };
 </script>
 
 <style scoped>
+/* Paper Size: 8.5 x 13 inches */
+.a4-paper {
+  width: 8.5in;
+  height: 13in;
+  margin: 0 auto;
+  padding: 0.25in !important;
+  box-shadow: 0 0 0 1px #ddd;
+  background: white;
+}
+
+@page {
+  size: 8.5in 13in;
+  margin: 0;
+}
+
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  .v-main {
+    padding: 0 !important;
+  }
+  .bg-grey-lighten-3 {
+    background: white !important;
+  }
+  .mb-4 {
+    display: none !important;
+  }
+  .a4-paper {
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+    page-break-after: always;
+    margin: 0;
+    padding: 0.25in !important;
+  }
+}
+
 .a4-container {
   max-width: 1100px;
 }
 #architectural-permit-form-page-1,
 #architectural-permit-form-page-2 {
   font-family: Arial, sans-serif;
-  font-size: 10pt;
+  font-size: 5pt;
   color: #000;
 }
 .mt-1 {
   margin-top: 4px !important;
 }
 .mt-2 {
-  margin-top: 8px !important;
+  margin-top: 4px !important;
 }
 .my-4 {
-  margin-top: 16px !important;
-  margin-bottom: 16px !important;
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
 }
 .mb-0 {
   margin-bottom: 0 !important;
@@ -801,22 +855,22 @@ export default {
   margin-bottom: 4px !important;
 }
 .mb-2 {
-  margin-bottom: 8px !important;
+  margin-bottom: 2px !important;
 }
 
 .header-section {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 .form-no {
-  font-size: 8pt;
+  font-size: 5pt;
   font-weight: bold;
 }
 .office-details {
   text-align: center;
-  font-size: 9pt;
+  font-size: 5pt;
   line-height: 1.3;
 }
 .bold-text {
@@ -824,17 +878,17 @@ export default {
 }
 .permit-title-section {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 .permit-title {
-  font-size: 16pt;
+  font-size: 12pt;
   font-weight: bold;
   letter-spacing: 1px;
 }
 .permit-numbers-section {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
 .permit-number-group {
   display: flex;
@@ -861,7 +915,7 @@ export default {
   width: 100%;
 }
 .box-label {
-  font-size: 9pt;
+  font-size: 5pt;
   font-weight: bold;
   padding: 4px 8px;
   text-transform: uppercase;
@@ -882,22 +936,22 @@ export default {
   border-left: 1px solid black;
   display: flex;
   align-items: flex-end;
-  font-size: 8pt;
+  font-size: 5pt;
   font-weight: bold;
 }
 .cell:first-child {
   border-left: none;
 }
 .sub-label {
-  font-size: 8pt;
+  font-size: 5pt;
   text-transform: uppercase;
   color: #333;
   font-weight: normal;
 }
 .section-title {
   font-weight: bold;
-  font-size: 9pt;
-  margin-bottom: 8px;
+  font-size: 5pt;
+  margin-bottom: 4px;
 }
 .underline {
   display: inline-block;
@@ -905,7 +959,7 @@ export default {
   margin-left: 6px;
 }
 .box-label-outer {
-  font-size: 9pt;
+  font-size: 5pt;
   font-weight: bold;
   margin-bottom: 2px;
 }
@@ -985,10 +1039,10 @@ export default {
   border-top: 2px solid black;
 }
 .scope-grid {
-  padding: 8px;
+  padding: 4px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 8px;
 }
 .scope-col {
   display: flex;
@@ -1027,25 +1081,25 @@ export default {
 }
 .facilities-grid :deep(label),
 .fire-code-grid :deep(label) {
-  font-size: 9pt !important;
+  font-size: 5pt !important;
 }
 .bottom-sections-wrapper {
   display: flex;
 }
 .percentage-section {
   width: 50%;
-  padding: 8px;
+  padding: 4px;
 }
 .fire-code-section {
   width: 50%;
-  padding: 8px;
+  padding: 4px;
   border-left: 1px solid black;
 }
 .percentage-field {
   display: flex;
   align-items: center;
-  font-size: 9pt;
-  margin-bottom: 12px;
+  font-size: 5pt;
+  margin-bottom: 6px;
 }
 .fire-code-grid {
   display: grid;
@@ -1055,28 +1109,28 @@ export default {
 
 .box-3-4-wrapper {
   display: flex;
-  gap: 8px;
+  gap: 4px;
 }
 .info-box-wrapper {
   flex: 1;
 }
 .info-box {
   border: 2px solid black;
-  padding: 8px;
+  padding: 3px;
 }
 .info-box-title {
-  font-size: 9pt;
+  font-size: 5pt;
   font-weight: bold;
   text-align: center;
   border-bottom: 1px solid black;
-  padding-bottom: 8px;
-  margin-bottom: 8px;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
 }
 .signature-area {
   display: flex;
   align-items: flex-end;
-  margin-top: 20px;
-  margin-bottom: 4px;
+  margin-top: 6px;
+  margin-bottom: 2px;
 }
 .signature-line-main {
   border-bottom: 1px solid black;
@@ -1102,13 +1156,13 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   border: 1px solid black;
-  margin-top: 8px;
+  margin-top: 2px;
 }
 .detail-row {
   border-bottom: 1px solid black;
   border-right: 1px solid black;
-  padding: 4px;
-  font-size: 9pt;
+  padding: 2px;
+  font-size: 5pt;
 }
 .detail-row:nth-child(2n) {
   border-right: none;
@@ -1122,14 +1176,14 @@ export default {
 
 .box-5-6-wrapper {
   display: flex;
-  gap: 8px;
+  gap: 4px;
 }
 .owner-box {
   border: 2px solid black;
   width: 100%;
 }
 .owner-box-title {
-  font-size: 9pt;
+  font-size: 5pt;
   text-transform: uppercase;
   padding: 8px;
   text-align: center;
@@ -1137,7 +1191,7 @@ export default {
   font-weight: bold;
 }
 .owner-signature-area {
-  padding: 16px 8px 8px 8px;
+  padding: 6px 4px 2px 4px;
   text-align: center;
 }
 .owner-signature-line {
