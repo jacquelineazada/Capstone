@@ -17,21 +17,21 @@
                   Follow these steps to complete your application
                 </div>
                 <v-card
-                  v-for="(step, index) in steps"
+                  v-for="(step, index) in sidebarSteps"
                   :key="index"
                   flat
-                  :color="currentStep === index ? 'blue-lighten-5' : '#f6f8fa'"
+                  :color="sidebarStep === index ? 'blue-lighten-5' : '#f6f8fa'"
                   class="d-flex align-center pa-3 mb-4 rounded-lg quick-guide-step"
                   :class="{
                     'clickable-step': index === 0,
-                    'active-step': currentStep === index,
+                    'active-step': sidebarStep === index,
                   }"
                   @click="goToStep(index)"
-                  elevation="currentStep === index ? 3 : 0"
+                  elevation="sidebarStep === index ? 2 : 0"
                   style="transition: box-shadow 0.16s, background 0.16s"
                 >
                   <v-avatar
-                    :color="currentStep === index ? 'primary' : '#2563EB'"
+                    :color="sidebarStep === index ? 'primary' : '#2563EB'"
                     size="36"
                     class="white--text mr-3 quick-guide-avatar"
                   >
@@ -61,73 +61,41 @@
             </v-card>
           </v-col>
 
-          <v-col cols="12" md="9" class="pa-6 main-content-bg">
-            <div class="main-content-wrapper">
+          <v-col cols="12" md="9" class="main-content-bg pa-6">
+            <v-container fluid class="px-4 mx-auto" style="max-width: 1300px">
               <v-stepper
-                v-model="stepperDummy"
+                v-model="formStepValue"
                 alt-labels
                 flat
-                class="mb-6 stepper-elevated"
+                class="mb-4 mt-2 stepper-elevated"
               >
-                  <v-stepper-header>
+                <v-stepper-header>
+                  <div
+                    v-for="(step, index) in formSteps"
+                    :key="index"
+                    class="d-flex align-center"
+                  >
                     <v-stepper-item
-                      title="Application"
-                      value="1"
-                      :complete="stepperDummy > 1"
-                      :color="stepperDummy >= 1 ? 'blue-darken-1' : 'grey lighten-2'"
+                      :title="step.title"
+                      :value="step.value"
+                      :complete="formStepValue > step.value"
+                      :color="
+                        formStepValue >= step.value ? 'blue-darken-1' : 'grey lighten-2'
+                      "
                       class="stepper-item-custom"
                     ></v-stepper-item>
                     <v-divider
+                      v-if="index < formSteps.length - 1"
                       :thickness="3"
                       :style="{
-                        'border-color': stepperDummy > 1 ? '#1976D2' : '#e0e0e0',
+                        'border-color':
+                          formStepValue > step.value ? '#1976D2' : '#e0e0e0',
                       }"
                       class="mx-2"
                     ></v-divider>
-                    <v-stepper-item
-                      title="Owner/Applicant"
-                      value="2"
-                      :complete="stepperDummy > 2"
-                      :color="stepperDummy >= 2 ? 'blue-darken-1' : 'grey lighten-2'"
-                      class="stepper-item-custom"
-                    ></v-stepper-item>
-                    <v-divider
-                      :thickness="3"
-                      :style="{
-                        'border-color': stepperDummy > 2 ? '#1976D2' : '#e0e0e0',
-                      }"
-                      class="mx-2"
-                    ></v-divider>
-                    <v-stepper-item
-                      title="Application Details"
-                      value="3"
-                      :complete="stepperDummy > 3"
-                      :color="stepperDummy >= 3 ? 'blue-darken-1' : 'grey lighten-2'"
-                      class="stepper-item-custom"
-                    ></v-stepper-item>
-                    <v-divider
-                      :thickness="3"
-                      :style="{
-                        'border-color': stepperDummy > 3 ? '#1976D2' : '#e0e0e0',
-                      }"
-                      class="mx-2"
-                    ></v-divider>
-                    <v-stepper-item
-                      title="Signatories Details"
-                      value="4"
-                      :complete="stepperDummy > 4"
-                      :color="stepperDummy >= 4 ? 'blue-darken-1' : 'grey lighten-2'"
-                      class="stepper-item-custom"
-                    ></v-stepper-item>
-                    <v-divider
-                      :thickness="3"
-                      :style="{
-                        'border-color': stepperDummy > 4 ? '#1976D2' : '#e0e0e0',
-                      }"
-                      class="mx-2"
-                    ></v-divider>
-                  </v-stepper-header>
-                </v-stepper>
+                  </div>
+                </v-stepper-header>
+              </v-stepper>
 
               <v-form ref="form" @submit.prevent="validateAndProceed">
                 <v-card class="my-2 pa-4 card-shadow">
@@ -137,73 +105,73 @@
                   <v-divider class="mb-4"></v-divider>
                   <v-card-text>
                     <v-card class="mb-4 card-section">
-                        <v-card-title class="text-h6 card-title-responsive section-title">
-                          <v-icon left color="blue-darken-3" class="mr-2"
-                            >mdi-account</v-icon
-                          >
-                          OWNER/APPLICANT
-                        </v-card-title>
-                        <v-divider></v-divider>
-                        <v-card-text>
-                          <v-row dense>
-                            <v-col cols="12" sm="6" md="4">
-                              <div class="plain-label">Last Name:</div>
-                              <div class="plain-value">
-                                {{ applicantData.lastName }}
-                              </div>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="4">
-                              <div class="plain-label">First Name:</div>
-                              <div class="plain-value">
-                                {{ applicantData.firstName }}
-                              </div>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="4">
-                              <div class="plain-label">Middle Name:</div>
-                              <div class="plain-value">
-                                {{ applicantData.middleInitial }}
-                              </div>
-                            </v-col>
-                          </v-row>
-                        </v-card-text>
-                      </v-card>
+                      <v-card-title class="text-h6 card-title-responsive section-title">
+                        <v-icon left color="blue-darken-3" class="mr-2"
+                          >mdi-account</v-icon
+                        >
+                        OWNER/APPLICANT
+                      </v-card-title>
+                      <v-divider></v-divider>
+                      <v-card-text>
+                        <v-row dense>
+                          <v-col cols="12" sm="6" md="4">
+                            <div class="plain-label">Last Name:</div>
+                            <div class="plain-value">
+                              {{ applicantData.lastName }}
+                            </div>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="4">
+                            <div class="plain-label">First Name:</div>
+                            <div class="plain-value">
+                              {{ applicantData.firstName }}
+                            </div>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="4">
+                            <div class="plain-label">Middle Name:</div>
+                            <div class="plain-value">
+                              {{ applicantData.middleInitial }}
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
 
-                      <v-card class="card-section">
-                        <v-card-title class="text-h6 card-title-responsive section-title">
-                          <v-icon left color="blue-darken-3" class="mr-2"
-                            >mdi-map-marker</v-icon
-                          >
-                          ADDRESS
-                        </v-card-title>
-                        <v-divider></v-divider>
-                        <v-card-text>
-                          <v-row dense>
-                            <v-col cols="12" sm="6" md="3">
-                              <div class="plain-label">No. Street:</div>
-                              <div class="plain-value">
-                                {{ applicantData.street }}
-                              </div>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="3">
-                              <div class="plain-label">Barangay:</div>
-                              <div class="plain-value">
-                                {{ applicantData.barangay }}
-                              </div>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="3">
-                              <div class="plain-label">City/Municipality:</div>
-                              <div class="plain-value">
-                                {{ applicantData.city }}
-                              </div>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="3">
-                              <div class="plain-label">Contact No.:</div>
-                              <div class="plain-value">
-                                {{ applicantData.contactNo }}
-                              </div>
-                            </v-col>
-                          </v-row>
-                        </v-card-text>
+                    <v-card class="card-section">
+                      <v-card-title class="text-h6 card-title-responsive section-title">
+                        <v-icon left color="blue-darken-3" class="mr-2"
+                          >mdi-map-marker</v-icon
+                        >
+                        ADDRESS
+                      </v-card-title>
+                      <v-divider></v-divider>
+                      <v-card-text>
+                        <v-row dense>
+                          <v-col cols="12" sm="6" md="3">
+                            <div class="plain-label">No. Street:</div>
+                            <div class="plain-value">
+                              {{ applicantData.street }}
+                            </div>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="3">
+                            <div class="plain-label">Barangay:</div>
+                            <div class="plain-value">
+                              {{ applicantData.barangay }}
+                            </div>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="3">
+                            <div class="plain-label">City/Municipality:</div>
+                            <div class="plain-value">
+                              {{ applicantData.city }}
+                            </div>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="3">
+                            <div class="plain-label">Contact No.:</div>
+                            <div class="plain-value">
+                              {{ applicantData.contactNo }}
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
                     </v-card>
                   </v-card-text>
                 </v-card>
@@ -228,7 +196,7 @@
                   </v-btn>
                 </div>
               </v-form>
-            </div>
+            </v-container>
           </v-col>
         </v-row>
       </v-container>
@@ -237,16 +205,26 @@
 </template>
 
 <script>
-export default {
-  name: "BuildingPermitPageWithStepper",
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  name: "OccupancyOwnerPage",
   data() {
     return {
-      currentStep: 1,
-      notificationsVisible: false,
-      steps: [
+      formStepValue: 2,
+      formSteps: [
+        { title: "Application", value: 1 },
+        { title: "Owner/Applicant", value: 2 },
+        { title: "Application Details", value: 3 },
+        { title: "Signatories Details", value: 4 },
+      ],
+      sidebarStep: 0,
+      sidebarSteps: [
         "Fill up the Unified Application Form",
         "Download Filled-up Unified Application Form and Completion Permits",
       ],
+      selectedApplicationType: null,
+      validationFailed: false,
       applicantData: {
         lastName: "DELA CRUZ",
         firstName: "JUAN",
@@ -256,28 +234,36 @@ export default {
         city: "Legazpi City",
         contactNo: "0917-123-4567",
       },
-      stepperDummy: 2, // for visual stepper only
     };
   },
   methods: {
+    validateAndProceed() {
+      console.log("Proceeding to next step (e.g., /applicant/OPlocation)");
+      this.$router.push("/applicant/OPlocation");
+    },
+
+    goBack() {
+      console.log("Going back to previous step (e.g., /applicant/OPtype)");
+      this.$router.push("/applicant/OPtype");
+    },
     handleLogout() {
       console.log("User logged out");
     },
     goToStep(index) {
-      this.currentStep = index;
-    },
-    showNotifications() {
-      this.notificationsVisible = true;
-      console.log("Toggling notifications menu");
-    },
-    validateAndProceed() {
-      this.$router.push("/applicant/OPlocation");
-    },
-    goBack() {
-      this.$router.push("/applicant/OPtype");
+      this.sidebarStep = index;
+      if (index === 0) {
+        console.log("Navigating to step 1 details...");
+      }
     },
   },
-};
+  watch: {
+    selectedApplicationType(newValue) {
+      if (newValue !== null && this.validationFailed) {
+        this.validationFailed = false;
+      }
+    },
+  },
+});
 </script>
 
 <style scoped>
@@ -285,7 +271,7 @@ export default {
   overflow: hidden !important;
 }
 .v-main.no-scroll {
-  height: calc(100vh - 88px);
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: #f6fafd;
@@ -293,15 +279,11 @@ export default {
 .content-area {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 24px;
 }
 .main-content-bg {
-  background: #f6fafd;
-  border-radius: 0 24px 24px 0;
+  background: #fafdff;
 }
-.page-title-gradient {
-  color: white;
-}
+
 .quick-guide-card {
   min-height: 100%;
   background: #fcfcff;
@@ -324,18 +306,11 @@ export default {
 .step-label {
   color: #23407c;
 }
-.notifications-card {
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
+
+.clickable-step {
+  cursor: pointer;
 }
-.list-notifications {
-  overflow-y: auto;
-}
-.notification-item {
-  border-radius: 8px !important;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
+
 .gradient-text {
   background: linear-gradient(90deg, #1976d2 20%, #1565c0 80%);
   background-clip: text;
@@ -344,9 +319,9 @@ export default {
 }
 
 .stepper-elevated {
-  background: transparent;
+  background: white;
   border-radius: 14px;
-  box-shadow: none;
+  box-shadow: 0 2px 6px 0 rgba(25, 118, 210, 0.06);
   padding: 20px 0;
 }
 
@@ -355,15 +330,13 @@ export default {
   transition: background 0.2s;
 }
 
-:deep(.v-stepper-item--selected .v-stepper-item__step) {
-  background-color: #1976d2 !important;
-  color: #fff !important;
-}
-
 .card-shadow {
   box-shadow: 0 2px 8px 0 rgba(25, 118, 210, 0.08);
   border-radius: 18px;
   border: 1.5px solid #e3eafc;
+}
+.error-card-wrapper {
+  border: 1.5px solid #ef9a9a !important;
 }
 
 .card-section {
@@ -372,27 +345,46 @@ export default {
   border: 1px solid #e3eafc;
 }
 
+.error-section {
+  background: #ffebee !important;
+  border: 1px solid #e57373 !important;
+}
+
 .section-title {
   color: #1976d2;
   font-weight: bold;
   font-size: 1.09rem;
   letter-spacing: 0.01em;
 }
-.plain-label {
-  font-size: 0.8rem;
-  color: #616161;
-  font-weight: 500;
-  margin-bottom: 2px;
+
+.custom-radio-card {
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  border-radius: 10px;
 }
 
-.plain-value {
-  font-size: 1rem;
-  color: #212121;
-  font-weight: 600;
-  padding: 6px 0;
-  min-height: 38px;
-  border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 12px;
+.custom-radio-card:hover {
+  border-color: #bbdefb;
+  box-shadow: 0 0 8px rgba(25, 118, 210, 0.1);
+}
+
+.card-selected {
+  border: 2px solid #1976d2;
+  box-shadow: 0 0 12px rgba(25, 118, 210, 0.2);
+  background-color: #e3f2fd !important;
+}
+
+.textfield-50 .v-input__control {
+  min-height: 50px;
+  border-radius: 8px;
+}
+
+.input-label {
+  font-size: 0.85rem;
+  color: #2a2a2a;
+  margin-bottom: 4px;
+  font-weight: 500;
 }
 
 .btn-rounded {
@@ -406,6 +398,7 @@ export default {
   font-size: 1.4rem;
   letter-spacing: 0.02em;
 }
+
 @media (max-width: 1200px) {
   .page-title-responsive {
     font-size: 1.12rem !important;
@@ -442,6 +435,9 @@ export default {
   .card-section {
     padding: 6px !important;
   }
+  .step-label {
+    font-size: 1rem !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -452,5 +448,21 @@ export default {
     min-width: 90px;
     font-size: 0.9rem;
   }
+}
+.plain-label {
+  font-size: 0.8rem;
+  color: #616161;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.plain-value {
+  font-size: 1rem;
+  color: #212121;
+  font-weight: 600;
+  padding: 6px 0;
+  min-height: 38px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 12px;
 }
 </style>

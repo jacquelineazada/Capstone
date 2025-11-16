@@ -48,15 +48,14 @@
               <div class="mt-4">
                 <v-btn
                   block
-                  color="primary"
-                  variant="elevated"
+                  color="white"
+                  variant="flat"
                   to="/login"
-                  class="font-weight-bold logout-btn-white"
-                  style="font-size: 1.1rem; letter-spacing: 0.02em"
+                  class="text-capitalize font-weight-bold logout-btn-white"
                   @click="handleLogout"
                 >
-                  <v-icon left color="white">mdi-logout</v-icon>
-                  <span style="color: #fff; font-weight: bold">Logout</span>
+                  <v-icon left color="black">mdi-logout</v-icon>
+                  <span style="color: #222; font-weight: bold">Logout</span>
                 </v-btn>
               </div>
             </v-card>
@@ -74,7 +73,7 @@
                   </h2>
                 </div>
                 <v-chip
-                  color="blue-darken-1"
+                  color="green lighten-4"
                   variant="flat"
                   size="small"
                   class="font-weight-bold"
@@ -174,15 +173,15 @@
 
               <v-card-actions class="d-flex justify-end pt-0 pb-4 px-6">
                 <v-btn
-                  color="white"
+                  color="#fff"
                   variant="flat"
                   elevation="2"
                   size="large"
-                  class="text-capitalize font-weight-bold action-button-styled"
-                  style="color: #1976d2; background-color: white"
+                  class="text-capitalize font-weight-bold occupancy-permit-btn"
                   to="/applicant/OPtype"
                 >
                   Apply for Occupancy Permit
+                  <v-icon left size="24" color="#23407c">mdi-arrow-right</v-icon>
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -281,14 +280,12 @@ export default {
   border-radius: 6px !important;
 }
 
-.logout-btn-white {
-  border-radius: 8px !important;
-  background-color: #1565c0 !important;
-  color: #fff !important;
-  box-shadow: 0 2px 8px 0 rgba(25, 118, 210, 0.08);
+.occupancy-permit-btn {
+  border-radius: 50px !important;
+  background-color: #ffffff !important;
+  color: #23407c !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.15) !important;
   min-height: 48px;
-  font-weight: bold;
-  font-size: 1.1rem;
-  letter-spacing: 0.02em;
+  padding: 0 24px;
 }
 </style>
