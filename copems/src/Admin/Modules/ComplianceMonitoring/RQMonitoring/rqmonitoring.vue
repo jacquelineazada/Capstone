@@ -14,7 +14,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex flex-column" style="height: calc(100vh - 88px - 57px)">
+      <div class="d-flex flex-column" style="height: calc(100% - 57px)">
         <v-list
           nav
           dense
@@ -54,7 +54,7 @@
 
           <v-card-text class="flex-grow-1 pa-4">
             <v-row class="mb-4">
-              <v-col cols="12" class="d-flex justify-start align-center">
+              <v-col cols="12" class="d-flex **justify-end** align-center">
                 <v-text-field
                   v-model="searchQuery"
                   label="Search documents/clearances..."
@@ -74,8 +74,8 @@
                 >
                   <template v-slot:activator="{ props }">
                     <v-btn
-                      color="#007bff"
-                      class="text-white"
+                      color="white"
+                      class="text-black"
                       prepend-icon="mdi-filter-variant"
                       v-bind="props"
                     >

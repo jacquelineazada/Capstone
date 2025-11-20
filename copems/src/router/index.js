@@ -64,6 +64,15 @@ const router = createRouter({
             ), // Or any other component for the root
         },
 
+        {
+          path: "applicantinfo",
+          name: "applicantinfo",
+          component: () =>
+            import(
+              "@/Admin/Modules/ComplianceMonitoring/ApplicantInfo/applicantinfo.vue"
+            ), // Or any other component for the root
+        },
+
         // Occupancy Permit Admin
       ],
     },

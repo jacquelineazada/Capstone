@@ -1,7 +1,6 @@
-
 <template>
   <v-app>
-    <v-navigation-drawer app permanent>
+    <v-navigation-drawer app permanent width="250" class="border-e">
       <div class="drawer-header">
         <v-icon size="36" class="me-2" color="#007bff"
           >mdi-office-building</v-icon
@@ -15,7 +14,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex flex-column" style="height: calc(100vh - 88px - 57px)">
+      <div class="d-flex flex-column" style="height: calc(100vh - 64px - 57px)">
         <v-list
           nav
           dense
@@ -26,7 +25,11 @@
             v-for="item in navItems"
             :key="item.title"
             :to="item.to"
-            class="py-1"
+            :class="[
+              'py-1',
+              { 'v-list-item--active': $route.path === item.to },
+            ]"
+            active-class="v-list-item--active-custom"
           >
             <div class="d-flex align-center">
               <v-icon class="me-3">{{ item.icon }}</v-icon>
@@ -34,8 +37,8 @@
             </div>
           </v-list-item>
         </v-list>
-        <v-list nav dense class="py-0 mt-auto" style="font-size: 14px">
-          <v-list-item link @click="logout" class="py-1">
+        <v-list nav dense class="py-0">
+          <v-list-item @click="logout" class="py-1">
             <div class="d-flex align-center">
               <v-icon class="me-3">mdi-logout</v-icon>
               <span>Logout</span>
@@ -45,283 +48,304 @@
       </div>
     </v-navigation-drawer>
 
-    <v-main class="bg-grey-lighten-4">
-      <div class="main-content-wrapper">
-        <v-card class="main-card">
-          <div class="card-header">
-            <div class="text-h6 font-weight-bold">Building Permit Admin</div>
-            <div class="d-flex align-center">
-              <v-menu :close-on-content-click="false" location="bottom end">
-                <template v-slot:activator="{ props }">
-                  <v-badge
-                    color="red"
-                    :content="unreadNotificationsCount"
-                    overlap
-                    class="me-2"
-                    v-bind="props"
-                  >
-                    <v-icon size="20">mdi-bell</v-icon>
-                  </v-badge>
-                </template>
-                <v-card min-width="300" max-width="400">
-                  <v-card-title class="notification-title">
-                    <span class="text-h6">Notifications</span>
-                    <v-btn icon @click="closeNotifications"
-                      ><v-icon>mdi-close</v-icon></v-btn
-                    >
-                  </v-card-title>
-                  <v-divider></v-divider>
-                  <v-card
-                    v-for="(notification, index) in notifications"
-                    :key="index"
-                    color="blue-lighten-4"
-                    class="ma-2"
-                  >
-                    <v-list-item class="d-flex flex-column align-start">
-                      <div class="d-flex align-center">
-                        <v-icon class="me-2" color="blue-darken-2"
-                          >mdi-file-document-outline</v-icon
-                        >
-                        <div class="font-weight-bold">
-                          Documents submitted for verification
-                        </div>
-                      </div>
-                      <v-list-item-subtitle class="text-caption mt-1">
-                        {{ notification.applicationId }}
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle class="text-caption">
-                        {{ notification.time }}
-                      </v-list-item-subtitle>
-                    </v-list-item>
-                  </v-card>
-                </v-card>
-              </v-menu>
-              <v-btn text to="/profile" class="profile-btn">
-                <v-avatar size="32" class="mx-2">
-                  <v-img
-                    alt="John"
-                    src="https://cdn.vuetifyjs.com/images/john.jpg"
-                  ></v-img>
-                </v-avatar>
-                <div class="d-flex flex-column text-left">
-                  <span class="text-caption font-weight-bold profile-text-name">
-                    Jefrey R. Santos
-                  </span>
-                  <span
-                    class="text-caption font-weight-medium profile-text-title"
-                  >
-                    Administrative
-                  </span>
-                </div>
-              </v-btn>
-            </div>
-          </div>
-          <v-divider></v-divider>
-
-          <v-card-text class="flex-grow-1 pa-4">
-            <v-row class="mb-6">
-              <v-col
-                v-for="(card, index) in dynamicStatusCards"
-                :key="index"
-                cols="12"
-                sm="6"
-                md="3"
+    <v-app-bar app color="white" flat class="border-b" height="64">
+      <div class="header-container-app-bar-with-nav">
+        <div class="text-h6 font-weight-bold" style="color: #333">
+          Compliance Monitoring
+        </div>
+        <div class="d-flex align-center">
+          <v-menu :close-on-content-click="false" location="bottom end">
+            <template v-slot:activator="{ props }">
+              <v-badge
+                color="red"
+                :content="unreadNotificationsCount"
+                overlap
+                class="me-4"
+                v-bind="props"
               >
-                <v-card
-                  v-if="card.title"
-                  color="white"
-                  elevation="2"
-                  @click="filterByStatus(card.status)"
+                <v-icon size="20">mdi-bell-outline</v-icon>
+              </v-badge>
+            </template>
+            <v-card min-width="300" max-width="400">
+              <v-card-title class="notification-title">
+                <span class="text-h6">Notifications</span>
+                <v-btn icon @click="closeNotifications"
+                  ><v-icon>mdi-close</v-icon></v-btn
                 >
-                  <v-card-text
-                    class="d-flex align-center justify-space-between"
-                  >
-                    <div>
-                      <div
-                        class="text-h6 font-weight-bold"
-                        :style="{ color: card.color }"
-                      >
-                        {{ card.title }}
-                      </div>
-                      <div
-                        class="text-h4 font-weight-bold"
-                        :style="{ color: card.color }"
-                      >
-                        {{ card.count }}
-                      </div>
+              </v-card-title>
+              <v-divider></v-divider>
+              <v-card
+                v-for="(notification, index) in notifications"
+                :key="index"
+                color="blue-lighten-4"
+                class="ma-2"
+              >
+                <v-list-item class="d-flex flex-column align-start">
+                  <div class="d-flex align-center">
+                    <v-icon class="me-2" color="blue-darken-2"
+                      >mdi-file-document-outline</v-icon
+                    >
+                    <div class="font-weight-bold">
+                      Documents submitted for verification
                     </div>
-                    <v-icon size="48" :color="card.color">{{
+                  </div>
+                  <v-list-item-subtitle class="text-caption mt-1">
+                    {{ notification.applicationId }}
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle class="text-caption">
+                    {{ notification.time }}
+                  </v-list-item-subtitle>
+                </v-list-item>
+              </v-card>
+            </v-card>
+          </v-menu>
+          <v-btn text to="/profile" class="profile-btn-app-bar">
+            <div class="d-flex flex-column text-right me-2">
+              <span class="text-caption font-weight-bold profile-text-name">
+                Jefrey R. Santos
+              </span>
+              <span class="text-caption font-weight-medium profile-text-title">
+                Administrative
+              </span>
+            </div>
+            <v-avatar size="32">
+              <v-img
+                alt="John"
+                src="https://cdn.vuetifyjs.com/images/john.jpg"
+              ></v-img>
+            </v-avatar>
+          </v-btn>
+        </div>
+      </div>
+    </v-app-bar>
+
+    <v-main class="bg-grey-lighten-4">
+      <div class="main-content-wrapper-new">
+        <div class="pa-4 pt-8">
+          <v-row class="mb-8">
+            <v-col
+              v-for="(card, index) in dynamicStatusCards"
+              :key="index"
+              cols="12"
+              sm="6"
+              md="3"
+            >
+              <v-card
+                v-if="card.title"
+                color="white"
+                elevation="1"
+                class="status-card"
+                @click="filterByStatus(card.status)"
+              >
+                <v-card-text class="d-flex align-center justify-space-between">
+                  <div>
+                    <div
+                      class="text-subtitle-1 font-weight-regular text-grey-darken-1"
+                    >
+                      {{ card.title }}
+                    </div>
+                    <div class="text-h4 font-weight-bold" style="color: #333">
+                      {{ card.count }}
+                    </div>
+                  </div>
+                  <div class="card-icon-area">
+                    <v-icon size="40" :color="card.color">{{
                       card.icon
                     }}</v-icon>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
 
-            <v-row class="mb-4 align-center justify-end">
-              <v-col cols="12" sm="10" md="6" class="d-flex justify-end">
-                <v-text-field
-                  v-model="search"
-                  label="Search applicants..."
-                  append-inner-icon="mdi-magnify"
-                  density="compact"
-                  variant="solo"
-                  hide-details
-                  single-line
-                  :loading="loading"
-                  @click:append-inner="onClick"
-                  style="max-width: 300px; margin-right: 8px"
-                ></v-text-field>
+          <v-row class="mb-4 align-center justify-space-between">
+            <v-col cols="12" md="6">
+              <v-tabs v-model="activeTab" class="custom-tabs">
+                <v-tab
+                  value="applied"
+                  @click="resetFilter('applied')"
+                  class="text-none"
+                >
+                  Applied Applicants
+                </v-tab>
+                <v-tab
+                  value="approved"
+                  @click="resetFilter('approved')"
+                  class="text-none"
+                >
+                  Approved Building Permit Statuses
+                </v-tab>
+              </v-tabs>
+            </v-col>
+            <v-col cols="12" md="6" class="d-flex justify-end">
+              <v-text-field
+                v-model="search"
+                label="Search applicants..."
+                prepend-inner-icon="mdi-magnify"
+                density="compact"
+                variant="outlined"
+                hide-details
+                single-line
+                :loading="loading"
+                @click:prepend-inner="onClick"
+                style="max-width: 300px; margin-right: 8px"
+                class="search-input"
+              ></v-text-field>
 
-                <v-menu :close-on-content-click="false" location="bottom right">
-                  <template v-slot:activator="{ props }">
+              <v-menu :close-on-content-click="false" location="bottom right">
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    color="white"
+                    class="text-blue-grey-darken-3 border"
+                    prepend-icon="mdi-filter-variant"
+                    v-bind="props"
+                    style="height: 40px; border-color: #dee2e6 !important"
+                  >
+                    Filter
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                    v-for="item in dynamicFilterOptions"
+                    :key="item.title"
+                    @click="filterByStatus(item.value)"
+                  >
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-col>
+          </v-row>
+
+          <v-window v-model="activeTab">
+            <v-window-item value="applied">
+              <v-card class="elevation-1 rounded-lg">
+                <v-data-table
+                  :headers="appliedApplicantsHeaders"
+                  :items="filteredAppliedApplicants"
+                  item-key="name"
+                  class="data-table-custom"
+                  hide-default-footer
+                >
+                  <template v-slot:item.name="{ item }">
+                    <div class="d-flex align-center py-2">
+                      <v-avatar
+                        size="36"
+                        :color="getAvatarColor(item.initials)"
+                        class="me-3 text-white font-weight-bold"
+                        style="border-radius: 8px"
+                      >
+                        {{ item.initials }}
+                      </v-avatar>
+                      <span>{{ item.name }}</span>
+                    </div>
+                  </template>
+                  <template v-slot:item.status="{ item }">
+                    <v-chip
+                      :color="getStatusColor(item.status)"
+                      variant="tonal"
+                      size="small"
+                      class="font-weight-bold text-caption"
+                    >
+                      {{ item.status }}
+                    </v-chip>
+                  </template>
+                  <template v-slot:item.action="{ item }">
                     <v-btn
                       color="#007bff"
-                      class="text-white"
-                      prepend-icon="mdi-filter-variant"
-                      v-bind="props"
-                      style="height: 48px"
+                      class="text-white text-none"
+                      size="small"
+                      to="applicantinfo"
+                      flat
                     >
-                      Filter
+                      View Details
                     </v-btn>
                   </template>
-                  <v-list>
-                    <v-list-item
-                      v-for="item in dynamicFilterOptions"
-                      :key="item.title"
-                      @click="filterByStatus(item.value)"
+                </v-data-table>
+              </v-card>
+            </v-window-item>
+
+            <v-window-item value="approved">
+              <v-card class="elevation-1 rounded-lg">
+                <v-data-table
+                  :headers="approvedPermitStatusesHeaders"
+                  :items="filteredApprovedPermitStatuses"
+                  item-key="applicationNumber"
+                  class="data-table-custom"
+                  hide-default-footer
+                >
+                  <template v-slot:item.status="{ item }">
+                    <v-chip
+                      :color="getStatusColor(item.status)"
+                      variant="tonal"
+                      size="small"
+                      class="font-weight-bold text-caption"
                     >
-                      <v-list-item-title>{{ item.title }}</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-col>
-            </v-row>
+                      {{ item.status }}
+                    </v-chip>
+                  </template>
+                  <template v-slot:item.nocSubmittedStatus="{ item }">
+                    <v-chip
+                      :color="item.nocSubmitted ? 'green' : 'red'"
+                      variant="tonal"
+                      size="small"
+                      class="font-weight-bold text-caption"
+                    >
+                      {{ item.nocSubmitted ? "Submitted" : "Pending" }}
+                    </v-chip>
+                  </template>
+                  <template v-slot:item.action="{ item }">
+                    <div class="d-flex flex-wrap align-center">
+                      <v-btn
+                        v-if="!item.nocSubmitted"
+                        color="white"
+                        class="my-1 mx-1 text-none border text-blue-grey-darken-4"
+                        size="small"
+                        @click="showEmailDialog(item)"
+                        flat
+                      >
+                        Email
+                      </v-btn>
 
-            <v-tabs v-model="activeTab" class="mb-4">
-              <v-tab value="applied" @click="resetFilter('applied')">
-                Applied Applicants
-              </v-tab>
-              <v-tab value="approved" @click="resetFilter('approved')">
-                Approved Building Permit Statuses
-              </v-tab>
-            </v-tabs>
-
-            <v-window v-model="activeTab">
-              <v-window-item value="applied">
-                <v-card class="elevation-1">
-                  <v-data-table
-                    :headers="appliedApplicantsHeaders"
-                    :items="filteredAppliedApplicants"
-                    item-key="name"
-                    class="elevation-0"
-                    hide-default-footer
-                  >
-                    <template v-slot:item.name="{ item }">
-                      <div class="d-flex align-center py-2">
-                        <v-avatar
-                          size="36"
-                          :color="getAvatarColor(item.initials)"
-                          class="me-2 text-white"
-                        >
-                          {{ item.initials }}
-                        </v-avatar>
-                        <span>{{ item.name }}</span>
-                      </div>
-                    </template>
-                    <template v-slot:item.status="{ item }">
-                      <v-chip :color="getStatusColor(item.status)" dark small>
-                        {{ item.status }}
-                      </v-chip>
-                    </template>
-                    <template v-slot:item.action="{ item }">
                       <v-btn
                         color="#007bff"
-                        class="text-white"
+                        class="text-white my-1 mx-1 text-none"
                         size="small"
-                        to="rqmonitoring"
+                        @click="showSetInspectionDialog(item)"
+                        flat
                       >
-                        View Details
+                        {{
+                          item.inspectionSet
+                            ? "Update Schedule"
+                            : "Set Inspection"
+                        }}
                       </v-btn>
-                    </template>
-                  </v-data-table>
-                </v-card>
-              </v-window-item>
 
-              <v-window-item value="approved">
-                <v-card class="elevation-1">
-                  <v-data-table
-                    :headers="approvedPermitStatusesHeaders"
-                    :items="filteredApprovedPermitStatuses"
-                    item-key="applicationNumber"
-                    class="elevation-0"
-                    hide-default-footer
-                  >
-                    <template v-slot:item.status="{ item }">
-                      <v-chip :color="getStatusColor(item.status)" dark small>
-                        {{ item.status }}
-                      </v-chip>
-                    </template>
-                    <template v-slot:item.nocSubmittedStatus="{ item }">
-                      <v-chip
-                        :color="item.nocSubmitted ? 'green' : 'red'"
-                        dark
-                        small
-                      >
-                        {{ item.nocSubmitted ? "Submitted" : "Pending" }}
-                      </v-chip>
-                    </template>
-                    <template v-slot:item.action="{ item }">
-                      <div class="d-flex flex-wrap align-center">
-                        <v-btn
-                          v-if="!item.nocSubmitted"
-                          color="white"
-                          class="my-1 mx-1 border border-light-grey"
-                          size="small"
-                          @click="showEmailDialog(item)"
-                        >
-                          <span class="text-blue-grey-darken-4">Email</span>
-                        </v-btn>
-
-                        <v-btn
-                          color="#007bff"
-                          class="text-white my-1 mx-1"
-                          size="small"
-                          @click="showSetInspectionDialog(item)"
-                        >
-                          {{
-                            item.inspectionSet
-                              ? "Update Schedule"
-                              : "Set Inspection"
-                          }}
-                        </v-btn>
-
-                        <v-menu v-if="item.inspectionSet" location="bottom end">
-                          <template v-slot:activator="{ props }">
-                            <v-btn
-                              v-bind="props"
-                              icon
-                              variant="text"
-                              size="small"
-                              class="my-1 mx-1 text-grey-darken-1"
-                            >
-                              <v-icon>mdi-dots-vertical</v-icon>
-                            </v-btn>
-                          </template>
-                          <v-list density="compact">
-                            <v-list-item @click="showLogbookDialog(item)">
-                              <v-list-item-title>View Report</v-list-item-title>
-                            </v-list-item>
-                          </v-list>
-                        </v-menu>
-                      </div>
-                    </template>
-                  </v-data-table>
-                </v-card>
-              </v-window-item>
-            </v-window>
-          </v-card-text>
-        </v-card>
+                      <v-menu v-if="item.inspectionSet" location="bottom end">
+                        <template v-slot:activator="{ props }">
+                          <v-btn
+                            v-bind="props"
+                            icon
+                            variant="text"
+                            size="small"
+                            class="my-1 mx-1 text-grey-darken-1"
+                          >
+                            <v-icon>mdi-dots-vertical</v-icon>
+                          </v-btn>
+                        </template>
+                        <v-list density="compact">
+                          <v-list-item @click="showLogbookDialog(item)">
+                            <v-list-item-title>View Report</v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </div>
+                  </template>
+                </v-data-table>
+              </v-card>
+            </v-window-item>
+          </v-window>
+        </div>
       </div>
 
       <v-dialog v-model="emailDialog" max-width="500px">
@@ -451,7 +475,7 @@
 
             <v-timeline density="compact" side="end">
               <v-timeline-item
-                v-for="(log, index) in simplifiedLogEntries"
+                v-for="(log, index) in currentLogbook?.entries"
                 :key="index"
                 :dot-color="getLogColor(log.status)"
                 size="small"
@@ -560,6 +584,7 @@ const notifications = ref([
   },
 ]);
 
+// Restored navigation items
 const navItems = [
   { title: "Dashboard", icon: "mdi-home-outline", to: "/dashboard" },
   {
@@ -752,8 +777,13 @@ const appliedStatusCards = computed(() => [
     color: "#dc3545",
     status: "Incomplete",
   },
-
-  { title: null, count: 0, icon: null, color: null, status: null },
+  {
+    title: "Placeholder",
+    count: 0,
+    icon: "mdi-clock-time-three-outline",
+    color: "#ffc107",
+    status: "Placeholder",
+  },
 ]);
 
 const totalApprovedCount = computed(
@@ -785,7 +815,7 @@ const approvedStatusCards = computed(() => [
     title: "Active Permits",
     count: activePermitCount.value,
     icon: "mdi-hand-coin-outline",
-    color: "#dc3545",
+    color: "#28a745",
     status: "ACTIVE",
   },
   {
@@ -895,6 +925,7 @@ function getLogColor(status) {
     Delayed: "red",
     "NOC Submitted": "teal",
     "Active Construction": "light-green-darken-2",
+    Scheduled: "light-blue-darken-3",
   };
   return colors[status] || "grey";
 }
@@ -906,6 +937,7 @@ function getLogIcon(status) {
     Active: "mdi-hammer-wrench",
     Delayed: "mdi-close-octagon",
     "NOC Submitted": "mdi-file-document-check",
+    Scheduled: "mdi-calendar-check",
   };
   return icons[status] || "mdi-circle-small";
 }
@@ -916,7 +948,7 @@ function getStatusColor(status) {
     Incomplete: "#dc3545",
     Pending: "#ffc107",
 
-    ACTIVE: "#dc3545",
+    ACTIVE: "#28a745",
     INACTIVE: "#dc3545",
     "NOT YET STARTED": "#ffc107",
 
@@ -962,9 +994,8 @@ function sendEmail() {
   console.log(
     `Email sent to ${recipientEmail.value} (Applicant: ${currentApplicant.value.name})`
   );
-  console.log(`Subject: ${emailSubject.value}`);
-  console.log(`Body: ${emailBody.value}`);
 
+  // Reset email body placeholder
   emailBody.value = emailBody.value.replace(
     currentApplicant.value.applicationNumber,
     "[ApplicationNumber]"
@@ -1037,72 +1068,22 @@ function saveInspectionSchedule() {
 </script>
 
 <style scoped>
-/* Main layout */
-.header-container {
-  max-width: 1600px;
+/* Top App Bar Styling for layout with Navigation */
+.header-container-app-bar-with-nav {
+  /* Aligns content on the right side of the app bar, after the drawer */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0;
-}
-
-.main-content-wrapper {
-  display: flex;
-  justify-content: center;
-}
-
-.main-card {
   width: 100%;
-  max-width: 1300px;
-  border-radius: 0;
-  box-shadow: none;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  /* No padding-left needed as v-app-bar handles it */
 }
 
-.card-header {
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 57px;
-}
-
-/* Header & Nav */
-.header-text-small {
-  font-size: 12px;
-  font-weight: 400;
-  color: white;
-  line-height: 1.2;
-}
-
-.header-text-large {
-  font-size: 15px;
-  font-weight: 700;
-  color: white;
-  line-height: 1.2;
-}
-
-.nav-links .v-btn {
-  text-transform: none !important;
-  font-weight: 500;
-  font-size: 17px;
-}
-
-.drawer-header {
-  display: flex;
-  align-items: center;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  height: 57px;
-}
-
-.profile-btn {
+.profile-btn-app-bar {
   background-color: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
   min-width: unset !important;
+  text-transform: none !important;
 }
 
 .profile-text-name {
@@ -1115,11 +1096,112 @@ function saveInspectionSchedule() {
   white-space: nowrap;
 }
 
-/* Notifications */
+/* Drawer Header Styling */
+.drawer-header {
+  height: 64px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Custom Active State for Sidebar */
+.v-list-item--active-custom {
+  color: #007bff !important;
+  background-color: #007bff10 !important;
+  border-left: 4px solid #007bff;
+  margin-left: -4px;
+}
+.v-list-item--active-custom .v-icon {
+  color: #007bff !important;
+}
+.v-list-item--active-custom span {
+  font-weight: 600 !important;
+}
+
+/* Main Content Wrapper */
+.main-content-wrapper-new {
+  width: 100%;
+  padding: 0 30px;
+}
+
+.main-content-wrapper-new > div {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Status Card Styling (Simplified/Aligned to the image) */
+.status-card {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.status-card:hover {
+  transform: translateY(-2px);
+}
+
+/* ICON AREA CHANGE: Increased size to accommodate 40px icon */
+.card-icon-area {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent; /* TRANSPARENT BACKGROUND */
+}
+
+/* Search and Filter Styling */
+.search-input {
+  border-radius: 8px;
+}
+
+/* Data Table Styling (Adjusted for a cleaner look) */
+.data-table-custom {
+  border-radius: 8px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.data-table-custom >>> th {
+  background-color: #f8f9fa !important;
+  font-weight: bold !important;
+  color: #495057 !important;
+  font-size: 0.875rem !important;
+}
+
+.data-table-custom >>> td {
+  font-size: 0.9rem !important;
+}
+
+/* Tabs Styling */
+.custom-tabs >>> .v-tab {
+  font-weight: 600;
+  color: #6c757d;
+}
+.custom-tabs >>> .v-tab--selected {
+  color: #007bff; /* Active tab color */
+}
+.custom-tabs >>> .v-slide-group__content {
+  border-bottom: 2px solid #e9ecef; /* Light separator line */
+}
+.custom-tabs >>> .v-tab--selected::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 2px;
+  background-color: #007bff;
+}
+
+/* Notifications (Kept for completeness) */
 .notification-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 </style>
-```
