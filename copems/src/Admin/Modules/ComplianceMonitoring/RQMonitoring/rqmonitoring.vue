@@ -1,676 +1,622 @@
 <template>
   <v-app>
-    <v-navigation-drawer app permanent>
-      <div class="drawer-header">
-        <v-icon size="36" class="me-2" color="#007bff"
-          >mdi-office-building</v-icon
-        >
-        <div>
-          <div class="text-h7 font-weight-bold" style="line-height: 1.2">
-            Construction Permit
-          </div>
-          <div class="text-caption font-weight-regular" style="color: #6c757d">
-            Management System
+    <v-app-bar flat color="#ffffff" dark height="88" app class="elevation-4">
+      <v-container
+        fluid
+        class="d-flex align-center py-0 justify-space-between"
+        style="max-width: 100%"
+      >
+        <div class="d-flex align-center">
+          <v-img
+            src="https://www2.naga.gov.ph/wp-content/uploads/2022/05/Naga_City_Official_Seal-1.png"
+            alt="LGU Seal"
+            width="85"
+            height="75"
+            contain
+            class="me-4"
+          />
+          <div>
+            <div class="header-subtitle">REPUBLIC OF THE PHILIPPINES</div>
+            <div class="header-title">CITY GOVERNMENT OF NAGA</div>
           </div>
         </div>
-      </div>
-      <div class="d-flex flex-column" style="height: calc(100% - 57px)">
-        <v-list
-          nav
-          dense
-          class="py-0 flex-grow-1 overflow-y-auto"
-          style="font-size: 14px"
-        >
-          <v-list-item
-            v-for="item in navItems"
-            :key="item.title"
-            :to="item.to"
-            class="py-1"
-          >
-            <div class="d-flex align-center">
-              <v-icon class="me-3">{{ item.icon }}</v-icon>
-              <span>{{ item.title }}</span>
-            </div>
-          </v-list-item>
-        </v-list>
-        <v-list nav dense class="py-0 mt-auto" style="font-size: 14px">
-          <v-list-item link @click="logout" class="py-1">
-            <div class="d-flex align-center">
-              <v-icon class="me-3">mdi-logout</v-icon>
-              <span>Logout</span>
-            </div>
-          </v-list-item>
-        </v-list>
-      </div>
-    </v-navigation-drawer>
-
-    <v-main class="bg-grey-lighten-4">
-      <div class="main-content-wrapper">
-        <v-card class="main-card">
-          <div class="card-header">
-            <div class="text-h6 font-weight-bold">Building Permit Admin</div>
-          </div>
-          <v-divider></v-divider>
-
-          <v-card-text class="flex-grow-1 pa-4">
-            <v-row class="mb-4">
-              <v-col cols="12" class="d-flex **justify-end** align-center">
-                <v-text-field
-                  v-model="searchQuery"
-                  label="Search documents/clearances..."
-                  append-inner-icon="mdi-magnify"
-                  density="compact"
-                  variant="solo"
-                  hide-details
-                  single-line
-                  @click:append-inner="onClick"
-                  style="max-width: 300px; margin-right: 8px"
-                ></v-text-field>
-
-                <v-menu
-                  :close-on-content-click="false"
-                  location="bottom left"
-                  offset-y
-                >
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      color="white"
-                      class="text-black"
-                      prepend-icon="mdi-filter-variant"
-                      v-bind="props"
+        <div class="d-flex align-center">
+          <v-menu :close-on-content-click="true" location="bottom end">
+            <template #activator="{ props }">
+              <v-btn variant="text" v-bind="props" class="profile-btn">
+                <div class="d-flex align-center">
+                  <v-avatar color="#5B21B6" size="38" class="mr-3">
+                    <span style="color: white; font-weight: 600">JT</span>
+                  </v-avatar>
+                  <div class="text-left">
+                    <div
+                      class="profile-name"
+                      style="font-size: 14px; font-weight: 600"
                     >
-                      Filter
-                    </v-btn>
-                  </template>
-                  <v-list>
-                    <v-list-item
-                      v-for="(item, index) in [
-                        'All',
-                        'Approved',
-                        'Pending',
-                        'In Progress Evaluation',
-                        'Evaluated',
-                        'Evaluated Returned Documents',
-                      ]"
-                      :key="index"
-                      @click="selectedFilter = item"
-                    >
-                      <v-list-item-title>{{ item }}</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-col>
-            </v-row>
-
-            <v-tabs v-model="activeTab" class="mb-4">
-              <v-tab>Document Requirement</v-tab>
-              <v-tab>To Follow</v-tab>
-            </v-tabs>
-
-            <v-card class="elevation-1">
-              <v-card-text class="pa-0">
-                <v-data-table
-                  :headers="computedHeaders"
-                  :items="filteredItems"
-                  class="rounded-b-lg"
-                  hide-default-footer
-                >
-                  <template v-slot:item.id="{ index }">
-                    {{ index + 1 }}
-                  </template>
-
-                  <template v-slot:item.status="{ item }">
-                    <v-chip
-                      :color="getStatusColor(item.status)"
-                      label
-                      dark
-                      small
-                      @click="showStatusHistory(item)"
-                    >
-                      {{ item.status }}
-                    </v-chip>
-                  </template>
-
-                  <template v-slot:item.notify="{ item }">
-                    <v-btn
-                      small
-                      :color="item.status === 'Approved' ? 'grey' : 'primary'"
-                      :class="{ 'white--text': item.status !== 'Approved' }"
-                      :disabled="item.status === 'Approved'"
-                      prepend-icon="mdi-email"
-                      @click="showEmailDialog(item)"
-                    >
-                      Email
-                    </v-btn>
-                  </template>
-                </v-data-table>
-              </v-card-text>
+                      John Timothy Umali
+                    </div>
+                    <div class="profile-role" style="font-size: 12px">OBO</div>
+                  </div>
+                  <v-icon class="ml-2" style="color: #6b7280"
+                    >mdi-chevron-down</v-icon
+                  >
+                </div>
+              </v-btn>
+            </template>
+            <v-card min-width="250" class="mt-1">
+              <v-list>
+                <v-list-item @click="logOut">
+                  <v-icon class="mr-2" size="small">mdi-logout</v-icon> Log Out
+                </v-list-item>
+              </v-list>
             </v-card>
-          </v-card-text>
-        </v-card>
-      </div>
+          </v-menu>
+        </div>
+      </v-container>
+    </v-app-bar>
 
-      <v-dialog v-model="emailDialog" max-width="600">
-        <v-card class="rounded-lg elevation-8">
-          <v-card-title class="pa-5 primary white--text d-flex align-center">
-            <v-icon dark size="24" class="me-3">mdi-email</v-icon>
-            <span class="text-h6 font-weight-bold">Compose Email</span>
-          </v-card-title>
-          <v-card-text class="pa-6">
-            <v-text-field
-              label="To"
-              :value="`Evaluator for ${
-                selectedItem.documentType || selectedItem.clearanceType
-              }`"
-              readonly
-              append-icon="mdi-account-tie"
-              density="compact"
-              variant="solo"
-              hide-details
-              class="mb-4"
-              style="font-weight: 500"
-            ></v-text-field>
+    <v-main class="main-content">
+      <v-snackbar
+        v-model="snackbar"
+        :timeout="3000"
+        :color="snackbarColor"
+        elevation="24"
+      >
+        {{ snackbarText }}
+        <template v-slot:actions>
+          <v-btn variant="text" @click="snackbar = false">Close</v-btn>
+        </template>
+      </v-snackbar>
 
-            <v-text-field
-              v-model="emailSubject"
-              label="Subject"
-              density="compact"
-              variant="solo"
-              hide-details
-              class="mb-4"
-            ></v-text-field>
-
-            <v-textarea
-              v-model="emailBody"
-              label="Email Body"
-              rows="10"
-              variant="solo"
-              hide-details
-            ></v-textarea>
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions class="pa-4">
-            <v-spacer></v-spacer>
-            <v-btn color="grey darken-1" text @click="emailDialog = false">
-              Cancel
-            </v-btn>
+      <div class="page-container">
+        <div class="application-header mb-4">
+          <div class="d-flex align-center mb-2">
             <v-btn
-              color="primary"
-              @click="sendEmail"
-              :disabled="!emailSubject || !emailBody"
-              class="font-weight-bold"
+              icon
+              variant="text"
+              size="small"
+              class="mr-2"
+              @click="goBack"
             >
-              <v-icon left>mdi-send</v-icon>
-              Send Email
+              <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <v-dialog v-model="emailSendSuccessDialog" max-width="400">
-        <v-card class="rounded-lg elevation-8">
-          <v-card-title class="headline primary white--text pa-4">
-            <v-icon left dark>mdi-check-circle-outline</v-icon>
-            Success
-          </v-card-title>
-          <v-card-text class="py-6 text-center">
-            <div class="text-h5 mb-2 green--text text--darken-2">
-              Email Sent Successfully!
+            <div>
+              <h2 class="header-main-title">Monitoring & Documentation</h2>
+              <p class="header-app-number">
+                Application No. {{ applicant.applicationNumber }}
+              </p>
             </div>
-            <p class="text-subtitle-1 grey--text text--darken-1">
-              Your email has been sent to the evaluator for:
-            </p>
-            <p class="text-h6 font-weight-bold mb-0">
-              {{ selectedItem.documentType || selectedItem.clearanceType }}
-            </p>
-          </v-card-text>
-          <v-card-actions class="pa-4">
-            <v-spacer></v-spacer>
-            <v-btn
-              color="primary"
-              @click="emailSendSuccessDialog = false"
-              class="font-weight-bold"
-            >
-              Close
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+          </div>
+        </div>
 
-      <v-dialog v-model="statusHistoryDialog" max-width="500">
-        <v-card class="rounded-lg">
-          <v-card-title class="headline primary white--text">
-            <v-icon left dark>mdi-history</v-icon>
-            Status History
-          </v-card-title>
-          <v-card-text class="py-6">
-            <v-timeline dense align-top>
-              <v-timeline-item
-                v-for="(history, index) in selectedItem.statusHistory"
-                :key="index"
-                :color="getStatusColor(history.status)"
-                small
-              >
-                <v-card class="elevation-2 rounded-lg">
-                  <v-card-text>
-                    <div class="font-weight-bold">
-                      <v-icon left :color="getStatusColor(history.status)">
-                        {{ getStatusIcon(history.status) }}
-                      </v-icon>
-                      {{ history.status }}
+        <v-card class="elevation-1 tabs-card">
+          <v-tabs v-model="activeTab" color="#3b82f6" class="custom-tabs">
+            <v-tab value="applicant"
+              ><v-icon class="mr-2" size="small">mdi-account-circle</v-icon
+              >Applicant Information</v-tab
+            >
+            <v-tab value="plans"
+              ><v-icon class="mr-2" size="small"
+                >mdi-file-document-multiple</v-icon
+              >Building Plans</v-tab
+            >
+            <v-tab value="monitoring"
+              ><v-icon class="mr-2" size="small">mdi-clock-check-outline</v-icon
+              >To Follow Requirements</v-tab
+            >
+          </v-tabs>
+
+          <v-divider></v-divider>
+
+          <v-window v-model="activeTab">
+            <v-window-item value="applicant">
+              <div class="tab-content pa-6">
+                <div class="details-page-header mb-6">
+                  <div class="d-flex align-center mb-2">
+                    <div class="header-icon-box">
+                      <v-icon size="28" color="white"
+                        >mdi-account-details</v-icon
+                      >
                     </div>
-                    <div class="text-caption grey--text text--darken-1 mt-1">
-                      {{ formatDate(history.date) }}
+                    <div class="ml-4">
+                      <h2 class="details-main-title">Applicant Information</h2>
+                      <p class="details-subtitle">
+                        Registered citizen of Naga City, Philippines
+                      </p>
                     </div>
+                  </div>
+                </div>
+                <v-card class="details-card elevation-1">
+                  <v-card-text class="pa-6">
+                    <v-row>
+                      <v-col cols="12" md="4"
+                        ><div class="detail-label">FULL NAME</div>
+                        <div class="detail-value">
+                          {{ applicant.name }}
+                        </div></v-col
+                      >
+                      <v-col cols="12" md="4"
+                        ><div class="detail-label">CITIZENSHIP</div>
+                        <div class="detail-value">
+                          {{ applicant.citizenship }}
+                        </div></v-col
+                      >
+                      <v-col cols="12" md="4"
+                        ><div class="detail-label">DATE OF BIRTH</div>
+                        <div class="detail-value">
+                          {{ applicant.dob }}
+                        </div></v-col
+                      >
+                      <v-col cols="12" md="8"
+                        ><div class="detail-label">LOCAL ADDRESS</div>
+                        <div class="detail-value">
+                          {{ applicant.address }}
+                        </div></v-col
+                      >
+                      <v-col cols="12" md="4"
+                        ><div class="detail-label">BARANGAY</div>
+                        <div class="detail-value">
+                          {{ applicant.barangay }}
+                        </div></v-col
+                      >
+                    </v-row>
                   </v-card-text>
                 </v-card>
-              </v-timeline-item>
-            </v-timeline>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="statusHistoryDialog = false">
-              Close
-            </v-btn>
-          </v-card-actions>
+              </div>
+            </v-window-item>
+
+            <v-window-item value="plans">
+              <div class="tab-content pa-6">
+                <v-row>
+                  <v-col cols="12" md="5">
+                    <h3 class="mb-4 text-subtitle-1 font-weight-bold">
+                      Plan Documents
+                    </h3>
+                    <div class="plans-scroll-container">
+                      <v-card
+                        v-for="(plan, index) in buildingPlans"
+                        :key="index"
+                        class="plan-card-item mb-2"
+                        :class="{
+                          'active-plan': selectedPlan.name === plan.name,
+                        }"
+                        @click="selectedPlan = plan"
+                        variant="outlined"
+                      >
+                        <div
+                          class="d-flex align-center justify-space-between w-100"
+                        >
+                          <div class="d-flex align-center">
+                            <v-icon color="#ef4444" size="24" class="mr-3"
+                              >mdi-file-pdf-box</v-icon
+                            >
+                            <div
+                              class="font-weight-bold"
+                              style="font-size: 13px"
+                            >
+                              {{ plan.name }}
+                            </div>
+                          </div>
+                          <v-chip
+                            :color="getStatusColor(plan.status)"
+                            size="x-small"
+                            label
+                            >{{ plan.status }}</v-chip
+                          >
+                        </div>
+                      </v-card>
+                    </div>
+                  </v-col>
+                  <v-col cols="12" md="7">
+                    <v-card
+                      variant="flat"
+                      class="pa-6 history-panel"
+                      v-if="selectedPlan"
+                    >
+                      <div
+                        class="d-flex justify-space-between align-start mb-6"
+                      >
+                        <div>
+                          <h3 class="text-h6 font-weight-bold mb-1">
+                            {{ selectedPlan.name }}
+                          </h3>
+                          <p class="text-caption text-grey">
+                            Engineer: {{ selectedPlan.assignedEngineer }}
+                          </p>
+                        </div>
+                        <v-btn
+                          v-if="
+                            selectedPlan.status === 'In Progress' &&
+                            selectedPlan.daysPending >= 3
+                          "
+                          color="error"
+                          size="small"
+                          @click="notifyEngineer(selectedPlan)"
+                          >Notify Engineer</v-btn
+                        >
+                      </div>
+                      <v-timeline side="end" align="start" density="compact">
+                        <v-timeline-item
+                          v-for="(event, i) in selectedPlan.history"
+                          :key="i"
+                          :dot-color="getEventColor(event.action)"
+                          size="small"
+                        >
+                          <div class="d-flex flex-column">
+                            <div class="text-subtitle-2 font-weight-bold">
+                              {{ event.action }}
+                            </div>
+                            <div class="text-caption text-grey">
+                              {{ event.date }}
+                            </div>
+                            <div
+                              v-if="event.remarks"
+                              class="text-body-2 mt-2 remarks-box"
+                            >
+                              "{{ event.remarks }}"
+                            </div>
+                          </div>
+                        </v-timeline-item>
+                      </v-timeline>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </div>
+            </v-window-item>
+
+            <v-window-item value="monitoring">
+              <div class="tab-content pa-6">
+                <v-row>
+                  <v-col cols="12" md="5">
+                    <h3 class="mb-4 text-subtitle-1 font-weight-bold">
+                      Requirement List
+                    </h3>
+                    <div class="plans-scroll-container">
+                      <v-card
+                        v-for="(doc, index) in monitoringDocs"
+                        :key="index"
+                        class="plan-card-item mb-2"
+                        :class="{
+                          'active-plan': selectedDoc.name === doc.name,
+                        }"
+                        @click="selectedDoc = doc"
+                        variant="outlined"
+                      >
+                        <div
+                          class="d-flex align-center justify-space-between w-100"
+                        >
+                          <div class="d-flex align-center">
+                            <v-icon color="#3b82f6" size="24" class="mr-3"
+                              >mdi-file-check</v-icon
+                            >
+                            <div
+                              class="font-weight-bold"
+                              style="font-size: 13px"
+                            >
+                              {{ doc.name }}
+                            </div>
+                          </div>
+                          <v-chip
+                            :color="getStatusColor(doc.status)"
+                            size="x-small"
+                            label
+                            >{{ doc.status }}</v-chip
+                          >
+                        </div>
+                      </v-card>
+                    </div>
+                  </v-col>
+                  <v-col cols="12" md="7">
+                    <v-card
+                      variant="flat"
+                      class="pa-6 history-panel"
+                      v-if="selectedDoc"
+                    >
+                      <div
+                        class="d-flex justify-space-between align-start mb-6"
+                      >
+                        <div>
+                          <h3 class="text-h6 font-weight-bold mb-1">
+                            {{ selectedDoc.name }}
+                          </h3>
+                          <p class="text-caption text-grey">
+                            Submission tracking for LGU requirements
+                          </p>
+                        </div>
+                        <v-btn
+                          v-if="selectedDoc.status === 'Pending'"
+                          color="orange-darken-3"
+                          size="small"
+                          @click="notifyApplicant(selectedDoc.name)"
+                          >Notify Applicant</v-btn
+                        >
+                      </div>
+                      <v-timeline
+                        v-if="selectedDoc.history.length > 0"
+                        side="end"
+                        align="start"
+                        density="compact"
+                      >
+                        <v-timeline-item
+                          v-for="(event, i) in selectedDoc.history"
+                          :key="i"
+                          :dot-color="getEventColor(event.action)"
+                          size="small"
+                        >
+                          <div class="d-flex flex-column">
+                            <div class="text-subtitle-2 font-weight-bold">
+                              {{ event.action }}
+                            </div>
+                            <div class="text-caption text-grey">
+                              {{ event.date }}
+                            </div>
+                          </div>
+                        </v-timeline-item>
+                      </v-timeline>
+                      <div
+                        v-else
+                        class="d-flex flex-column align-center justify-center py-10 text-grey-lighten-1"
+                      >
+                        <v-icon size="48">mdi-file-clock-outline</v-icon>
+                        <p class="mt-2">Waiting for initial submission</p>
+                      </div>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </div>
+            </v-window-item>
+          </v-window>
         </v-card>
-      </v-dialog>
+      </div>
     </v-main>
   </v-app>
 </template>
 
-<script>
-export default {
-  name: "BuildingPermitMonitoring",
-  data() {
-    return {
-      activeTab: 0,
-      searchQuery: "",
-      selectedFilter: "All",
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-      emailDialog: false,
-      emailSendSuccessDialog: false,
-      emailSubject: "",
-      emailBody: "",
-      statusHistoryDialog: false,
-      selectedItem: {},
-      notifications: [
-        {
-          title: "Documents submitted for verification",
-          applicationId: "BP-2025-0808-001",
-          time: "Just now",
-          read: false,
-        },
-        {
-          title: "Documents submitted for verification",
-          applicationId: "BP-2024-808234-T",
-          time: "2 hours ago",
-          read: false,
-        },
-        {
-          title: "Documents submitted for verification",
-          applicationId: "BP-2024-808345-T",
-          time: "4 hours ago",
-          read: false,
-        },
-      ],
-      navItems: [
-        { title: "Dashboard", icon: "mdi-home-outline", to: "/dashboard" },
-        {
-          title: "Locational Clearance",
-          icon: "mdi-map-marker-outline",
-          to: "/locational-clearance",
-        },
-        {
-          title: "Building Permit",
-          icon: "mdi-file-document-outline",
-          to: "/bpapplicants",
-        },
-        {
-          title: "Occupancy Permit",
-          icon: "mdi-file-certificate-outline",
-          to: "/occupancy-permit",
-        },
-        {
-          title: "Compliance Monitoring",
-          icon: "mdi-clipboard-list-outline",
-          to: "/compliance-monitoring",
-        },
-      ],
-      headers: {
-        documentRequirement: [
-          { title: "#", key: "id" },
-          { title: "Document Type", key: "documentType" },
-          { title: "Date Submitted", key: "dateSubmitted" },
-          { title: "Deadline Due", key: "deadlineDue" },
-          { title: "Status", key: "status" },
-          { title: "Email", key: "notify", sortable: false },
-        ],
-        toFollow: [
-          { title: "#", key: "id" },
-          { title: "Clearance Type", key: "clearanceType" },
-          { title: "Date Submitted", key: "dateSubmitted" },
-          { title: "Deadline Due", key: "deadlineDue" },
-          { title: "Status", key: "status" },
-          { title: "Email", key: "notify", sortable: false },
-        ],
+const router = useRouter();
+const activeTab = ref("plans");
+const snackbar = ref(false);
+const snackbarText = ref("");
+const snackbarColor = ref("success");
+
+const goBack = () => router.push("/admin/ComplianceMonitoring");
+
+const applicant = ref({
+  applicationNumber: "OP-2025-002",
+  name: "Juanito D. Dela Cruz",
+  citizenship: "Filipino",
+  dob: "August 15, 1988",
+  address: "123 Magsaysay Ave, Concepcion Pequeña",
+  barangay: "Concepcion Pequeña",
+});
+
+const buildingPlans = ref([
+  {
+    name: "Architectural Plans",
+    status: "Approved",
+    assignedEngineer: "Arch. Reyes",
+    daysPending: 0,
+    history: [
+      {
+        action: "Approved",
+        date: "Dec 06, 2025",
+        remarks: "Final design approved by City Architect.",
       },
-      items: {
-        documentRequirement: [
-          {
-            documentType: "Architectural Plans",
-            dateSubmitted: "04/05/2025",
-            deadlineDue: "4 Days Left",
-            status: "In Progress Evaluation",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-04" },
-              { status: "In Progress Evaluation", date: "2025-04-05" },
-            ],
-          },
-          {
-            documentType: "Civil/Structural Plans",
-            dateSubmitted: "04/05/2025",
-            deadlineDue: "4 Days Left",
-            status: "Evaluated",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-04" },
-              { status: "In Progress Evaluation", date: "2025-04-05" },
-              { status: "Evaluated", date: "2025-04-09" },
-            ],
-          },
-          {
-            documentType: "Electrical Plans",
-            dateSubmitted: "04/05/2025",
-            deadlineDue: "Approved",
-            status: "Approved",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-05" },
-              { status: "In Progress Evaluation", date: "2025-04-07" },
-              { status: "Approved", date: "2025-04-12" },
-            ],
-          },
-          {
-            documentType: "Structural Analysis",
-            dateSubmitted: "04/06/2025",
-            deadlineDue: "Approved",
-            status: "Approved",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-06" },
-              { status: "In Progress Evaluation", date: "2025-04-08" },
-              { status: "Approved", date: "2025-04-13" },
-            ],
-          },
-          {
-            documentType: "Electronics Plans",
-            dateSubmitted: "04/07/2025",
-            deadlineDue: "",
-            status: "Evaluated Returned Documents",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-06" },
-              { status: "In Progress Evaluation", date: "2025-04-07" },
-              { status: "Evaluated Returned Documents", date: "2025-04-10" },
-            ],
-          },
-          {
-            documentType: "Sanitary Plans",
-            dateSubmitted: "04/08/2025",
-            deadlineDue: "4 Days Left",
-            status: "In Progress Evaluation",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-07" },
-              { status: "In Progress Evaluation", date: "2025-04-08" },
-            ],
-          },
-          {
-            documentType: "Mechanical Plans",
-            dateSubmitted: "04/08/2025",
-            deadlineDue: "Pending",
-            status: "Pending",
-            statusHistory: [{ status: "Pending", date: "2025-04-08" }],
-          },
-          {
-            documentType: "Geodetic Plans",
-            dateSubmitted: "04/10/2025",
-            deadlineDue: "Approved",
-            status: "Approved",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-09" },
-              { status: "In Progress Evaluation", date: "2025-04-10" },
-              { status: "Approved", date: "2025-04-17" },
-            ],
-          },
-          {
-            documentType: "Lot Plan",
-            dateSubmitted: "04/11/2025",
-            deadlineDue: "4 Days Left",
-            status: "In Progress Evaluation",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-10" },
-              { status: "In Progress Evaluation", date: "2025-04-11" },
-            ],
-          },
-        ],
-        toFollow: [
-          {
-            clearanceType: "Construction Safety and Health Program",
-            dateSubmitted: "04/05/2025",
-            deadlineDue: "",
-            status: "Approved",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-04" },
-              { status: "Approved", date: "2025-04-05" },
-            ],
-          },
-          {
-            clearanceType: "DPWH Clearance",
-            dateSubmitted: "04/05/2025",
-            deadlineDue: "",
-            status: "Approved",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-04" },
-              { status: "Approved", date: "2025-04-05" },
-            ],
-          },
-          {
-            clearanceType: "Barangay Clearance",
-            dateSubmitted: "04/05/2025",
-            deadlineDue: "",
-            status: "Approved",
-            statusHistory: [
-              { status: "Pending", date: "2025-04-04" },
-              { status: "Approved", date: "2025-04-05" },
-            ],
-          },
-        ],
+      { action: "Evaluated", date: "Dec 04, 2025" },
+      { action: "Submitted", date: "Dec 01, 2025" },
+    ],
+  },
+  {
+    name: "Civil/Structural Plans",
+    status: "Returned",
+    assignedEngineer: "Engr. Santos",
+    daysPending: 4,
+    history: [
+      {
+        action: "Returned",
+        date: "Dec 22, 2025",
+        remarks: "Structural calculation for beam B1 is missing.",
       },
-    };
+      { action: "Evaluated", date: "Dec 20, 2025" },
+      { action: "Submitted", date: "Dec 18, 2025" },
+    ],
   },
-  computed: {
-    unreadNotificationsCount() {
-      return this.notifications.filter((n) => !n.read).length;
-    },
-    computedHeaders() {
-      const tabNames = ["documentRequirement", "toFollow"];
-      return this.headers[tabNames[this.activeTab]];
-    },
-    currentItems() {
-      const tabNames = ["documentRequirement", "toFollow"];
-      return this.items[tabNames[this.activeTab]];
-    },
-    filteredItems() {
-      const itemsToFilter = this.currentItems;
-      let filtered = itemsToFilter;
-
-      if (this.selectedFilter !== "All") {
-        filtered = filtered.filter(
-          (item) => item.status === this.selectedFilter
-        );
-      }
-
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        filtered = filtered.filter((item) => {
-          const documentTypeMatch =
-            item.documentType &&
-            item.documentType.toLowerCase().includes(query);
-          const clearanceTypeMatch =
-            item.clearanceType &&
-            item.clearanceType.toLowerCase().includes(query);
-          return documentTypeMatch || clearanceTypeMatch;
-        });
-      }
-
-      return filtered;
-    },
+  {
+    name: "Electrical Plans",
+    status: "Evaluated",
+    assignedEngineer: "Engr. Lopez",
+    daysPending: 1,
+    history: [
+      { action: "Evaluated", date: "Dec 23, 2025" },
+      { action: "Submitted", date: "Dec 20, 2025" },
+    ],
   },
-  methods: {
-    closeNotifications() {
-      this.notifications.forEach((notification) => {
-        notification.read = true;
-      });
-    },
-    logout() {
-      console.log("Logged out");
-    },
-    onClick() {
-      console.log("Search clicked");
-    },
-    getStatusColor(status) {
-      if (status === "Approved") return "green";
-      if (status === "Pending") return "orange";
-      if (status === "In Progress Evaluation") return "blue";
-      if (status === "Evaluated") return "deep-purple";
-      if (status === "Evaluated Returned Documents") return "red";
-      return "grey";
-    },
-    getStatusIcon(status) {
-      if (status === "Approved") return "mdi-check-circle";
-      if (status === "Pending") return "mdi-clock-time-three";
-      if (status === "In Progress Evaluation") return "mdi-progress-alert";
-      if (status === "Evaluated") return "mdi-checkbox-marked-circle-outline";
-      if (status === "Evaluated Returned Documents")
-        return "mdi-file-undo-outline";
-      return "mdi-circle";
-    },
-    formatDate(dateString) {
-      if (!dateString) return "N/A";
-      const options = { year: "numeric", month: "long", day: "numeric" };
-      return new Date(dateString).toLocaleDateString(undefined, options);
-    },
-    showEmailDialog(item) {
-      this.selectedItem = item;
-
-      this.emailSubject = "";
-      this.emailBody = "";
-
-      const type = item.documentType || item.clearanceType;
-      this.emailSubject = `Inquiry regarding ${type} - Status: ${item.status}`;
-      this.emailBody = `Dear Evaluator,\n\nI am writing to follow up on the status of the "${type}" document/clearance, which is currently listed as "${item.status}".\n\n[Insert your specific question or request here.]\n\nThank you.\n\nSincerely,`;
-      this.emailDialog = true;
-    },
-    sendEmail() {
-      console.log("Email Sent:");
-      console.log(
-        "To: Evaluator for",
-        this.selectedItem.documentType || this.selectedItem.clearanceType
-      );
-      console.log("Subject:", this.emailSubject);
-      console.log("Body:", this.emailBody);
-
-      this.emailDialog = false;
-      this.emailSendSuccessDialog = true;
-    },
-    showStatusHistory(item) {
-      this.selectedItem = item;
-      this.statusHistoryDialog = true;
-    },
+  {
+    name: "Structural Analysis",
+    status: "In Progress",
+    assignedEngineer: "Engr. Santos",
+    daysPending: 5,
+    history: [{ action: "Submitted", date: "Dec 19, 2025" }],
   },
+  {
+    name: "Electronics Plans",
+    status: "Verified",
+    assignedEngineer: "Engr. Gomez",
+    daysPending: 0,
+    history: [
+      { action: "Verified", date: "Dec 21, 2025" },
+      { action: "Submitted", date: "Dec 18, 2025" },
+    ],
+  },
+  {
+    name: "Sanitary Plans",
+    status: "In Progress",
+    assignedEngineer: "Engr. Castro",
+    daysPending: 1,
+    history: [{ action: "Submitted", date: "Dec 23, 2025" }],
+  },
+  {
+    name: "Mechanical Plans",
+    status: "Pending",
+    assignedEngineer: "Engr. Diaz",
+    daysPending: 0,
+    history: [],
+  },
+  {
+    name: "Geodetic Plans",
+    status: "Pending",
+    assignedEngineer: "Engr. Luna",
+    daysPending: 0,
+    history: [],
+  },
+  {
+    name: "Lot Plan",
+    status: "Pending",
+    assignedEngineer: "Engr. Luna",
+    daysPending: 0,
+    history: [],
+  },
+]);
+
+const monitoringDocs = ref([
+  {
+    name: "Fire Safety Certificate",
+    status: "Approved",
+    history: [
+      { action: "Approved", date: "Dec 24, 2025" },
+      { action: "Received", date: "Dec 22, 2025" },
+      { action: "Submitted", date: "Dec 20, 2025" },
+    ],
+  },
+  {
+    name: "Zoning Clearance",
+    status: "Received",
+    history: [
+      { action: "Received", date: "Dec 23, 2025" },
+      { action: "Submitted", date: "Dec 22, 2025" },
+    ],
+  },
+  { name: "ECC Permit", status: "Pending", history: [] },
+]);
+
+const selectedPlan = ref(buildingPlans.value[0]);
+const selectedDoc = ref(monitoringDocs.value[0]);
+
+const getStatusColor = (status) => {
+  const colors = {
+    Approved: "success",
+    Received: "info",
+    Verified: "info",
+    Evaluated: "secondary",
+    "In Progress": "warning",
+    Returned: "error",
+    Pending: "grey",
+  };
+  return colors[status] || "grey";
 };
+
+const getEventColor = (action) => {
+  if (action === "Approved" || action === "Verified") return "green";
+  if (action === "Received") return "info";
+  if (action === "Submitted") return "blue";
+  if (action === "Evaluated") return "orange";
+  if (action === "Returned") return "red";
+  return "grey";
+};
+
+const notifyEngineer = (plan) => {
+  snackbarText.value = `Alert sent to ${plan.assignedEngineer} for ${plan.name}.`;
+  snackbarColor.value = "error";
+  snackbar.value = true;
+};
+
+const notifyApplicant = (docName) => {
+  snackbarText.value = `Notice sent to Applicant: Please submit ${docName}.`;
+  snackbarColor.value = "orange-darken-3";
+  snackbar.value = true;
+};
+
+const logOut = () => console.log("Logout");
 </script>
 
 <style scoped>
-/* Main layout */
-.header-container {
-  max-width: 1600px;
+.main-content {
+  background-color: #f5f6fa;
+  padding-top: 88px;
+}
+.page-container {
+  max-width: 1460px;
+  margin: 16px auto 0;
+  padding: 0 12px;
+}
+.header-icon-box {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0;
-}
-
-.main-content-wrapper {
-  display: flex;
   justify-content: center;
 }
-
-.main-card {
-  width: 100%;
-  max-width: 1300px;
-  border-radius: 0;
-  box-shadow: none;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.card-header {
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 57px;
-}
-
-/* Header & Nav */
-.header-text-small {
-  font-size: 12px;
-  font-weight: 400;
-  color: white;
-  line-height: 1.2;
-}
-
-.header-text-large {
-  font-size: 15px;
+.details-main-title {
+  font-size: 22px;
   font-weight: 700;
-  color: white;
-  line-height: 1.2;
+  color: #111827;
+  margin: 0;
 }
-
-.nav-links .v-btn {
-  text-transform: none !important;
+.details-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+.details-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+.detail-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9ca3af;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.detail-value {
+  font-size: 15px;
   font-weight: 500;
-  font-size: 17px;
+  color: #111827;
 }
-
-.drawer-header {
-  display: flex;
-  align-items: center;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  height: 57px;
+.plans-scroll-container {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 8px;
 }
-
-.profile-btn {
-  background-color: transparent !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  min-width: unset !important;
+.plan-card-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
 }
-
-.profile-text-name {
-  color: #555;
-  white-space: nowrap;
+.active-plan {
+  border-color: #3b82f6 !important;
+  background-color: #f0f7ff !important;
 }
-
-.profile-text-title {
-  color: #888;
-  white-space: nowrap;
+.history-panel {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
+  min-height: 400px;
 }
-
-/* Notifications */
-.notification-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.remarks-box {
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #d1d5db;
+  font-style: italic;
+  color: #4b5563;
 }
 </style>
