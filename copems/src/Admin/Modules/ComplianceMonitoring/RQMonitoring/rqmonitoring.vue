@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar flat color="#ffffff" dark height="88" app class="elevation-4">
+    <v-app-bar flat color="#ffffff" height="88" app class="elevation-4">
       <v-container
         fluid
         class="d-flex align-center py-0 justify-space-between"
@@ -33,9 +33,11 @@
                       class="profile-name"
                       style="font-size: 14px; font-weight: 600"
                     >
-                      John Timothy Umali
+                      JT
                     </div>
-                    <div class="profile-role" style="font-size: 12px">OBO</div>
+                    <div class="profile-role" style="font-size: 12px">
+                      OBO Monitoring
+                    </div>
                   </div>
                   <v-icon class="ml-2" style="color: #6b7280"
                     >mdi-chevron-down</v-icon
@@ -100,10 +102,6 @@
                 >mdi-file-document-multiple</v-icon
               >Building Plans</v-tab
             >
-            <v-tab value="monitoring"
-              ><v-icon class="mr-2" size="small">mdi-clock-check-outline</v-icon
-              >To Follow Requirements</v-tab
-            >
           </v-tabs>
 
           <v-divider></v-divider>
@@ -167,208 +165,169 @@
 
             <v-window-item value="plans">
               <div class="tab-content pa-6">
-                <v-row>
-                  <v-col cols="12" md="5">
-                    <h3 class="mb-4 text-subtitle-1 font-weight-bold">
-                      Plan Documents
-                    </h3>
-                    <div class="plans-scroll-container">
-                      <v-card
-                        v-for="(plan, index) in buildingPlans"
-                        :key="index"
-                        class="plan-card-item mb-2"
-                        :class="{
-                          'active-plan': selectedPlan.name === plan.name,
-                        }"
-                        @click="selectedPlan = plan"
-                        variant="outlined"
-                      >
-                        <div
-                          class="d-flex align-center justify-space-between w-100"
-                        >
-                          <div class="d-flex align-center">
-                            <v-icon color="#ef4444" size="24" class="mr-3"
-                              >mdi-file-pdf-box</v-icon
-                            >
-                            <div
-                              class="font-weight-bold"
-                              style="font-size: 13px"
-                            >
-                              {{ plan.name }}
-                            </div>
-                          </div>
-                          <v-chip
-                            :color="getStatusColor(plan.status)"
-                            size="x-small"
-                            label
-                            >{{ plan.status }}</v-chip
+                <v-table class="plans-table border">
+                  <thead>
+                    <tr>
+                      <th class="font-weight-bold">Plan Type</th>
+                      <th class="font-weight-bold">Assigned Engineer</th>
+                      <th class="font-weight-bold">Latest Remark</th>
+                      <th class="font-weight-bold">Status</th>
+                      <th class="font-weight-bold text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(plan, index) in buildingPlans" :key="index">
+                      <td>
+                        <div class="d-flex align-center">
+                          <v-icon color="#ef4444" class="mr-2"
+                            >mdi-file-pdf-box</v-icon
+                          >
+                          <span
+                            class="font-weight-bold"
+                            style="font-size: 13px"
+                            >{{ plan.name }}</span
                           >
                         </div>
-                      </v-card>
-                    </div>
-                  </v-col>
-                  <v-col cols="12" md="7">
-                    <v-card
-                      variant="flat"
-                      class="pa-6 history-panel"
-                      v-if="selectedPlan"
-                    >
-                      <div
-                        class="d-flex justify-space-between align-start mb-6"
+                      </td>
+                      <td style="font-size: 13px">
+                        {{ plan.assignedEngineer }}
+                      </td>
+                      <td
+                        style="font-size: 13px"
+                        class="text-grey-darken-1 text-truncate"
                       >
-                        <div>
-                          <h3 class="text-h6 font-weight-bold mb-1">
-                            {{ selectedPlan.name }}
-                          </h3>
-                          <p class="text-caption text-grey">
-                            Engineer: {{ selectedPlan.assignedEngineer }}
-                          </p>
-                        </div>
+                        {{ plan.history[0]?.remarks || "Awaiting evaluation" }}
+                      </td>
+                      <td>
+                        <v-chip
+                          :color="getStatusColor(plan.status)"
+                          size="x-small"
+                          label
+                          class="font-weight-bold"
+                          >{{ plan.status }}</v-chip
+                        >
+                      </td>
+                      <td class="text-center">
                         <v-btn
-                          v-if="
-                            selectedPlan.status === 'In Progress' &&
-                            selectedPlan.daysPending >= 3
-                          "
-                          color="error"
-                          size="small"
-                          @click="notifyEngineer(selectedPlan)"
-                          >Notify Engineer</v-btn
+                          variant="outlined"
+                          color="#3b82f6"
+                          size="x-small"
+                          class="font-weight-bold"
+                          @click="openLog(plan)"
+                          >View Log</v-btn
                         >
-                      </div>
-                      <v-timeline side="end" align="start" density="compact">
-                        <v-timeline-item
-                          v-for="(event, i) in selectedPlan.history"
-                          :key="i"
-                          :dot-color="getEventColor(event.action)"
-                          size="small"
-                        >
-                          <div class="d-flex flex-column">
-                            <div class="text-subtitle-2 font-weight-bold">
-                              {{ event.action }}
-                            </div>
-                            <div class="text-caption text-grey">
-                              {{ event.date }}
-                            </div>
-                            <div
-                              v-if="event.remarks"
-                              class="text-body-2 mt-2 remarks-box"
-                            >
-                              "{{ event.remarks }}"
-                            </div>
-                          </div>
-                        </v-timeline-item>
-                      </v-timeline>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </div>
-            </v-window-item>
-
-            <v-window-item value="monitoring">
-              <div class="tab-content pa-6">
-                <v-row>
-                  <v-col cols="12" md="5">
-                    <h3 class="mb-4 text-subtitle-1 font-weight-bold">
-                      Requirement List
-                    </h3>
-                    <div class="plans-scroll-container">
-                      <v-card
-                        v-for="(doc, index) in monitoringDocs"
-                        :key="index"
-                        class="plan-card-item mb-2"
-                        :class="{
-                          'active-plan': selectedDoc.name === doc.name,
-                        }"
-                        @click="selectedDoc = doc"
-                        variant="outlined"
-                      >
-                        <div
-                          class="d-flex align-center justify-space-between w-100"
-                        >
-                          <div class="d-flex align-center">
-                            <v-icon color="#3b82f6" size="24" class="mr-3"
-                              >mdi-file-check</v-icon
-                            >
-                            <div
-                              class="font-weight-bold"
-                              style="font-size: 13px"
-                            >
-                              {{ doc.name }}
-                            </div>
-                          </div>
-                          <v-chip
-                            :color="getStatusColor(doc.status)"
-                            size="x-small"
-                            label
-                            >{{ doc.status }}</v-chip
-                          >
-                        </div>
-                      </v-card>
-                    </div>
-                  </v-col>
-                  <v-col cols="12" md="7">
-                    <v-card
-                      variant="flat"
-                      class="pa-6 history-panel"
-                      v-if="selectedDoc"
-                    >
-                      <div
-                        class="d-flex justify-space-between align-start mb-6"
-                      >
-                        <div>
-                          <h3 class="text-h6 font-weight-bold mb-1">
-                            {{ selectedDoc.name }}
-                          </h3>
-                          <p class="text-caption text-grey">
-                            Submission tracking for LGU requirements
-                          </p>
-                        </div>
-                        <v-btn
-                          v-if="selectedDoc.status === 'Pending'"
-                          color="orange-darken-3"
-                          size="small"
-                          @click="notifyApplicant(selectedDoc.name)"
-                          >Notify Applicant</v-btn
-                        >
-                      </div>
-                      <v-timeline
-                        v-if="selectedDoc.history.length > 0"
-                        side="end"
-                        align="start"
-                        density="compact"
-                      >
-                        <v-timeline-item
-                          v-for="(event, i) in selectedDoc.history"
-                          :key="i"
-                          :dot-color="getEventColor(event.action)"
-                          size="small"
-                        >
-                          <div class="d-flex flex-column">
-                            <div class="text-subtitle-2 font-weight-bold">
-                              {{ event.action }}
-                            </div>
-                            <div class="text-caption text-grey">
-                              {{ event.date }}
-                            </div>
-                          </div>
-                        </v-timeline-item>
-                      </v-timeline>
-                      <div
-                        v-else
-                        class="d-flex flex-column align-center justify-center py-10 text-grey-lighten-1"
-                      >
-                        <v-icon size="48">mdi-file-clock-outline</v-icon>
-                        <p class="mt-2">Waiting for initial submission</p>
-                      </div>
-                    </v-card>
-                  </v-col>
-                </v-row>
+                      </td>
+                    </tr>
+                  </tbody>
+                </v-table>
               </div>
             </v-window-item>
           </v-window>
         </v-card>
       </div>
     </v-main>
+
+    <v-dialog v-model="logDialog" max-width="850px">
+      <v-card class="rounded-lg">
+        <v-card-title
+          class="pa-4 d-flex align-center justify-space-between"
+          style="background: #f8fafc; border-bottom: 1px solid #e5e7eb"
+        >
+          <div class="d-flex align-center">
+            <div class="header-icon-box mr-3" style="width: 40px; height: 40px">
+              <v-icon size="20" color="white">mdi-history</v-icon>
+            </div>
+            <div>
+              <div class="font-weight-bold" style="font-size: 16px">
+                Transaction History
+              </div>
+              <div class="text-caption text-grey">
+                {{ selectedPlan?.name }} | Progress:
+                {{ selectedPlan?.progress }}%
+              </div>
+            </div>
+          </div>
+          <v-btn
+            icon="mdi-close"
+            variant="text"
+            size="small"
+            @click="logDialog = false"
+          ></v-btn>
+        </v-card-title>
+
+        <v-card-text class="pa-0">
+          <div class="pa-4 bg-grey-lighten-5">
+            <v-progress-linear
+              :model-value="selectedPlan?.progress"
+              color="#3b82f6"
+              height="8"
+              rounded
+            ></v-progress-linear>
+          </div>
+          <v-table class="log-details-table">
+            <thead>
+              <tr style="background: #f9fafb">
+                <th class="text-left py-3">Timestamp</th>
+                <th class="text-left py-3">Action</th>
+                <th class="text-left py-3">Remarks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(event, i) in selectedPlan?.history" :key="i">
+                <td style="font-size: 12px">
+                  <b>{{ event.date }}</b
+                  ><br />{{ event.time }}
+                </td>
+                <td>
+                  <v-chip
+                    :color="getEventColor(event.action)"
+                    size="x-small"
+                    label
+                    class="font-weight-bold"
+                    >{{ event.action }}</v-chip
+                  >
+                </td>
+                <td class="py-3">
+                  <div class="remarks-box" style="font-size: 13px">
+                    {{ event.remarks }}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-card-text>
+
+        <v-divider></v-divider>
+        <v-card-actions class="pa-4 d-flex align-center">
+          <v-text-field
+            label="Assigned Personnel"
+            :model-value="selectedPlan?.assignedEngineer"
+            readonly
+            density="compact"
+            variant="solo-filled"
+            flat
+            hide-details
+            prepend-inner-icon="mdi-account-lock"
+            class="mr-4"
+            style="max-width: 300px"
+          ></v-text-field>
+          <v-spacer></v-spacer>
+          <v-btn variant="text" color="grey" @click="logDialog = false"
+            >Close</v-btn
+          >
+          <v-btn
+            color="#3b82f6"
+            variant="flat"
+            size="small"
+            prepend-icon="mdi-bell-ring"
+            class="font-weight-bold px-4"
+            @click="notifyPersonnel"
+          >
+            Notify Personnel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -378,11 +337,12 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const activeTab = ref("plans");
+const logDialog = ref(false);
+const selectedPlan = ref(null);
+
 const snackbar = ref(false);
 const snackbarText = ref("");
 const snackbarColor = ref("success");
-
-const goBack = () => router.push("/admin/ComplianceMonitoring");
 
 const applicant = ref({
   applicationNumber: "OP-2025-002",
@@ -396,122 +356,76 @@ const applicant = ref({
 const buildingPlans = ref([
   {
     name: "Architectural Plans",
-    status: "Approved",
-    assignedEngineer: "Arch. Reyes",
-    daysPending: 0,
+    status: "Under Evaluation",
+    assignedEngineer: "Arch. Romeo",
+    progress: 65,
     history: [
       {
-        action: "Approved",
-        date: "Dec 06, 2025",
-        remarks: "Final design approved by City Architect.",
+        action: "EVALUATING",
+        date: "Dec 28, 2025",
+        time: "02:30 PM",
+        remarks: "Spatial floor plan review in progress.",
       },
-      { action: "Evaluated", date: "Dec 04, 2025" },
-      { action: "Submitted", date: "Dec 01, 2025" },
+      {
+        action: "SUBMITTED",
+        date: "Dec 20, 2025",
+        time: "09:00 AM",
+        remarks: "Digital blueprints received.",
+      },
     ],
   },
   {
-    name: "Civil/Structural Plans",
+    name: "Structural Plans",
     status: "Returned",
     assignedEngineer: "Engr. Santos",
-    daysPending: 4,
+    progress: 30,
     history: [
       {
-        action: "Returned",
+        action: "RETURNED",
         date: "Dec 22, 2025",
-        remarks: "Structural calculation for beam B1 is missing.",
+        time: "04:45 PM",
+        remarks: "Load calculation for C2 beam missing.",
       },
-      { action: "Evaluated", date: "Dec 20, 2025" },
-      { action: "Submitted", date: "Dec 18, 2025" },
     ],
   },
   {
     name: "Electrical Plans",
-    status: "Evaluated",
-    assignedEngineer: "Engr. Lopez",
-    daysPending: 1,
-    history: [
-      { action: "Evaluated", date: "Dec 23, 2025" },
-      { action: "Submitted", date: "Dec 20, 2025" },
-    ],
-  },
-  {
-    name: "Structural Analysis",
-    status: "In Progress",
-    assignedEngineer: "Engr. Santos",
-    daysPending: 5,
-    history: [{ action: "Submitted", date: "Dec 19, 2025" }],
-  },
-  {
-    name: "Electronics Plans",
     status: "Verified",
-    assignedEngineer: "Engr. Gomez",
-    daysPending: 0,
+    assignedEngineer: "Engr. Lopez",
+    progress: 100,
     history: [
-      { action: "Verified", date: "Dec 21, 2025" },
-      { action: "Submitted", date: "Dec 18, 2025" },
+      {
+        action: "VALIDATED",
+        date: "Dec 23, 2025",
+        time: "03:20 PM",
+        remarks: "All load schedules verified.",
+      },
     ],
-  },
-  {
-    name: "Sanitary Plans",
-    status: "In Progress",
-    assignedEngineer: "Engr. Castro",
-    daysPending: 1,
-    history: [{ action: "Submitted", date: "Dec 23, 2025" }],
   },
   {
     name: "Mechanical Plans",
     status: "Pending",
     assignedEngineer: "Engr. Diaz",
-    daysPending: 0,
-    history: [],
-  },
-  {
-    name: "Geodetic Plans",
-    status: "Pending",
-    assignedEngineer: "Engr. Luna",
-    daysPending: 0,
-    history: [],
-  },
-  {
-    name: "Lot Plan",
-    status: "Pending",
-    assignedEngineer: "Engr. Luna",
-    daysPending: 0,
+    progress: 0,
     history: [],
   },
 ]);
 
-const monitoringDocs = ref([
-  {
-    name: "Fire Safety Certificate",
-    status: "Approved",
-    history: [
-      { action: "Approved", date: "Dec 24, 2025" },
-      { action: "Received", date: "Dec 22, 2025" },
-      { action: "Submitted", date: "Dec 20, 2025" },
-    ],
-  },
-  {
-    name: "Zoning Clearance",
-    status: "Received",
-    history: [
-      { action: "Received", date: "Dec 23, 2025" },
-      { action: "Submitted", date: "Dec 22, 2025" },
-    ],
-  },
-  { name: "ECC Permit", status: "Pending", history: [] },
-]);
+const openLog = (plan) => {
+  selectedPlan.value = plan;
+  logDialog.value = true;
+};
 
-const selectedPlan = ref(buildingPlans.value[0]);
-const selectedDoc = ref(monitoringDocs.value[0]);
+const notifyPersonnel = () => {
+  snackbarText.value = `Notification sent to ${selectedPlan.value.assignedEngineer} regarding ${selectedPlan.value.name}.`;
+  snackbarColor.value = "#3b82f6";
+  snackbar.value = true;
+};
 
 const getStatusColor = (status) => {
   const colors = {
-    Approved: "success",
-    Received: "info",
-    Verified: "info",
-    Evaluated: "secondary",
-    "In Progress": "warning",
+    Verified: "success",
+    "Under Evaluation": "blue",
     Returned: "error",
     Pending: "grey",
   };
@@ -519,27 +433,17 @@ const getStatusColor = (status) => {
 };
 
 const getEventColor = (action) => {
-  if (action === "Approved" || action === "Verified") return "green";
-  if (action === "Received") return "info";
-  if (action === "Submitted") return "blue";
-  if (action === "Evaluated") return "orange";
-  if (action === "Returned") return "red";
-  return "grey";
+  const colors = {
+    VALIDATED: "green",
+    SUBMITTED: "blue",
+    EVALUATING: "orange",
+    RETURNED: "red",
+  };
+  return colors[action] || "grey";
 };
 
-const notifyEngineer = (plan) => {
-  snackbarText.value = `Alert sent to ${plan.assignedEngineer} for ${plan.name}.`;
-  snackbarColor.value = "error";
-  snackbar.value = true;
-};
-
-const notifyApplicant = (docName) => {
-  snackbarText.value = `Notice sent to Applicant: Please submit ${docName}.`;
-  snackbarColor.value = "orange-darken-3";
-  snackbar.value = true;
-};
-
-const logOut = () => console.log("Logout");
+const goBack = () => router.push("/admin/ComplianceMonitoring");
+const logOut = () => console.log("Logout triggered");
 </script>
 
 <style scoped>
@@ -551,6 +455,26 @@ const logOut = () => console.log("Logout");
   max-width: 1460px;
   margin: 16px auto 0;
   padding: 0 12px;
+}
+.header-subtitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+.header-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1f2937;
+}
+.header-main-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+.header-app-number {
+  font-size: 14px;
+  color: #6b7280;
 }
 .header-icon-box {
   width: 56px;
@@ -589,34 +513,15 @@ const logOut = () => console.log("Logout");
   font-weight: 500;
   color: #111827;
 }
-.plans-scroll-container {
-  max-height: 500px;
-  overflow-y: auto;
-  padding-right: 8px;
-}
-.plan-card-item {
-  padding: 12px 16px;
-  cursor: pointer;
-  border: 1px solid #e5e7eb;
+.plans-table {
+  background: white;
   border-radius: 8px;
-  background: white;
-}
-.active-plan {
-  border-color: #3b82f6 !important;
-  background-color: #f0f7ff !important;
-}
-.history-panel {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background: white;
-  min-height: 400px;
 }
 .remarks-box {
   background: #f9fafb;
-  padding: 12px;
-  border-radius: 8px;
-  border-left: 4px solid #d1d5db;
-  font-style: italic;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 3px solid #3b82f6;
   color: #4b5563;
 }
 </style>

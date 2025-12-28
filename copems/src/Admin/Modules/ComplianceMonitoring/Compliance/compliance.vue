@@ -221,8 +221,9 @@
                           size="32"
                           :color="getAvatarColor(item.initials)"
                           class="me-2 text-white text-caption font-weight-bold"
-                          >{{ item.initials }}</v-avatar
                         >
+                          {{ item.initials }}
+                        </v-avatar>
                         <span>{{ item.name }}</span>
                       </div>
                     </td>
@@ -324,6 +325,14 @@
                             >
                             <v-list-item-title>View Report</v-list-item-title>
                           </v-list-item>
+                          <v-list-item @click="openToFollowDialog(item)">
+                            <template #prepend
+                              ><v-icon size="small"
+                                >mdi-clipboard-text-clock-outline</v-icon
+                              ></template
+                            >
+                            <v-list-item-title>To Follow</v-list-item-title>
+                          </v-list-item>
                         </v-list>
                       </v-menu>
                     </td>
@@ -335,6 +344,138 @@
         </v-card>
       </div>
     </v-main>
+
+    <v-dialog v-model="toFollowDialog" max-width="750px">
+      <v-card rounded="lg">
+        <v-card-title
+          class="pa-4 bg-grey-lighten-4 font-weight-bold d-flex align-center"
+        >
+          <v-icon class="mr-2" color="primary">mdi-file-clock</v-icon>
+          Clearances Status
+          <v-spacer></v-spacer>
+          <v-btn
+            icon="mdi-close"
+            variant="text"
+            @click="toFollowDialog = false"
+          ></v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="pa-6">
+          <div v-if="selectedItem" class="mb-6">
+            <div class="text-overline text-grey-darken-1">
+              APPLICANT DETAILS
+            </div>
+            <div class="text-h6 font-weight-bold">{{ selectedItem.name }}</div>
+            <div class="text-caption text-grey-darken-1">
+              {{ selectedItem.applicationNumber }}
+            </div>
+          </div>
+
+          <v-table class="border rounded-lg overflow-hidden">
+            <thead class="bg-grey-lighten-5">
+              <tr>
+                <th
+                  class="text-left text-uppercase text-caption font-weight-bold py-4"
+                >
+                  Clearance Type
+                </th>
+                <th
+                  class="text-left text-uppercase text-caption font-weight-bold py-4"
+                >
+                  Status & Timestamp
+                </th>
+                <th
+                  class="text-center text-uppercase text-caption font-weight-bold py-4"
+                >
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(status, type) in selectedItemClearances" :key="type">
+                <td
+                  class="font-weight-bold text-body-2 py-4"
+                  style="color: #334155"
+                >
+                  {{ type }}
+                </td>
+                <td class="py-4">
+                  <div class="d-flex flex-column">
+                    <div class="d-flex align-center mb-1">
+                      <v-icon
+                        size="16"
+                        :color="
+                          status.submitted ? 'success' : 'orange-darken-1'
+                        "
+                        class="mr-1"
+                      >
+                        {{
+                          status.submitted
+                            ? "mdi-check-circle"
+                            : "mdi-alert-circle"
+                        }}
+                      </v-icon>
+                      <span
+                        :class="
+                          status.submitted
+                            ? 'text-success'
+                            : 'text-orange-darken-2'
+                        "
+                        class="text-caption font-weight-black"
+                      >
+                        {{
+                          status.submitted ? "SUBMITTED" : "PENDING SUBMISSION"
+                        }}
+                      </span>
+                    </div>
+                    <div
+                      v-if="status.submitted"
+                      class="text-caption font-weight-medium text-grey-darken-1 ml-5"
+                    >
+                      Received: {{ status.date }} at {{ status.time }}
+                    </div>
+                  </div>
+                </td>
+                <td class="text-center py-4">
+                  <v-btn
+                    v-if="!status.submitted"
+                    size="small"
+                    color="primary"
+                    elevation="0"
+                    prepend-icon="mdi-bell-outline"
+                    class="text-none font-weight-bold"
+                    @click="notifyClearance(type)"
+                  >
+                    Notify
+                  </v-btn>
+                  <v-btn
+                    v-else
+                    size="small"
+                    color="grey-lighten-3"
+                    disabled
+                    elevation="0"
+                    class="text-none font-weight-bold text-grey-darken-1"
+                  >
+                    Notified
+                  </v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions class="pa-4">
+          <v-spacer></v-spacer>
+          <v-btn
+            color="grey-darken-1"
+            variant="text"
+            class="text-none font-weight-bold"
+            @click="toFollowDialog = false"
+            >Close Window</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="inspectionDialog" max-width="500px" persistent>
       <v-card rounded="lg">
@@ -352,10 +493,28 @@
               prepend-inner-icon="mdi-map-marker"
               readonly
               bg-color="grey-lighten-4"
-              class="mb-2"
-              hint="Location is fixed to the site address"
-              persistent-hint
+              class="mb-4"
             />
+
+            <v-select
+              v-model="inspectionForm.inspector"
+              :items="availableInspectors"
+              label="Assign Inspector"
+              placeholder="Select an available inspector"
+              variant="outlined"
+              density="comfortable"
+              prepend-inner-icon="mdi-account-hard-hat"
+              class="mb-4"
+              :rules="[(v) => !!v || 'Please assign an inspector']"
+            >
+              <template v-slot:item="{ props, item }">
+                <v-list-item
+                  v-bind="props"
+                  :subtitle="item.raw.role"
+                ></v-list-item>
+              </template>
+            </v-select>
+
             <v-row>
               <v-col cols="6">
                 <v-text-field
@@ -427,9 +586,7 @@
                 </div>
               </v-col>
             </v-row>
-
             <v-divider class="mb-6"></v-divider>
-
             <div class="d-flex align-center justify-space-between mb-4">
               <span class="text-subtitle-1 font-weight-bold"
                 >Construction Started:</span
@@ -442,7 +599,6 @@
                 {{ selectedReport.hasStarted ? "YES" : "NO" }}
               </v-chip>
             </div>
-
             <v-card
               variant="outlined"
               color="grey-lighten-2"
@@ -511,9 +667,9 @@ const activeTab = ref("applied");
 const search = ref("");
 const activeFilter = ref("Total");
 
-// Dialog States
 const inspectionDialog = ref(false);
 const reportDialog = ref(false);
+const toFollowDialog = ref(false);
 const isFormValid = ref(false);
 const selectedItem = ref(null);
 const selectedReport = ref(null);
@@ -529,7 +685,28 @@ const inspectionForm = ref({
   location: "",
   date: "",
   time: "",
+  inspector: null,
 });
+
+// LIST OF AVAILABLE INSPECTORS
+const availableInspectors = ref([
+  {
+    title: "Engr. Ricardo Gomez",
+    role: "Chief Inspector",
+    value: "Ricardo Gomez",
+  },
+  {
+    title: "Arch. Elena Cruz",
+    role: "Structural Specialist",
+    value: "Elena Cruz",
+  },
+  { title: "Engr. Mateo Remeo", role: "Site Inspector", value: "Mateo Reyes" },
+  {
+    title: "Engr. Sofia Lim",
+    role: "Electrical Inspector",
+    value: "Sofia Lim",
+  },
+]);
 
 const applicants = ref([
   {
@@ -539,7 +716,7 @@ const applicants = ref([
     profession: "Civil Engineer",
     dateSubmitted: "04/02/2025",
     dateIssued: "01/01/2025",
-    permitStatus: "Passed",
+    permitStatus: "Pending",
     email: "laurence.f@email.com",
     inspectionDate: "2025-05-10",
     location: "Brgy. Concepcion Pequena, Naga City",
@@ -547,6 +724,19 @@ const applicants = ref([
       hasStarted: true,
       percentage: 35,
       lastChecked: "June 12, 2025",
+    },
+    clearances: {
+      "DOLE CLEARANCE": {
+        submitted: true,
+        date: "2025-01-10",
+        time: "09:30 AM",
+      },
+      "DPWH CLEARANCE": { submitted: false, date: null, time: null },
+      "BARANGAY CLEARANCES": {
+        submitted: true,
+        date: "2025-01-05",
+        time: "02:15 PM",
+      },
     },
   },
   {
@@ -560,10 +750,11 @@ const applicants = ref([
     email: "aaron.c@email.com",
     inspectionDate: null,
     location: "Magsaysay Ave., Naga City",
-    constructionData: {
-      hasStarted: false,
-      percentage: 0,
-      lastChecked: "N/A",
+    constructionData: { hasStarted: false, percentage: 0, lastChecked: "N/A" },
+    clearances: {
+      "DOLE CLEARANCE": { submitted: false, date: null, time: null },
+      "DPWH CLEARANCE": { submitted: false, date: null, time: null },
+      "BARANGAY CLEARANCES": { submitted: false, date: null, time: null },
     },
   },
   {
@@ -576,15 +767,27 @@ const applicants = ref([
     email: "maria.santos@email.com",
     inspectionDate: null,
     location: "Panganiban Drive, Naga City",
-    constructionData: {
-      hasStarted: false,
-      percentage: 0,
-      lastChecked: "N/A",
+    constructionData: { hasStarted: false, percentage: 0, lastChecked: "N/A" },
+    clearances: {
+      "DOLE CLEARANCE": {
+        submitted: true,
+        date: "2025-03-12",
+        time: "10:00 AM",
+      },
+      "DPWH CLEARANCE": {
+        submitted: true,
+        date: "2025-03-14",
+        time: "11:30 AM",
+      },
+      "BARANGAY CLEARANCES": {
+        submitted: true,
+        date: "2025-03-10",
+        time: "03:45 PM",
+      },
     },
   },
 ]);
 
-// Logic for View Report
 const viewReport = (item) => {
   selectedReport.value = {
     name: item.name,
@@ -592,6 +795,24 @@ const viewReport = (item) => {
     ...item.constructionData,
   };
   reportDialog.value = true;
+};
+
+const openToFollowDialog = (item) => {
+  selectedItem.value = item;
+  toFollowDialog.value = true;
+};
+
+const selectedItemClearances = computed(() =>
+  selectedItem.value ? selectedItem.value.clearances : {}
+);
+
+const notifyClearance = (type) => {
+  snackbar.value = {
+    show: true,
+    text: `Notification sent to ${selectedItem.value.name} for ${type}`,
+    color: "primary",
+    icon: "mdi-bell-ring",
+  };
 };
 
 const sendEmail = (item) => {
@@ -609,6 +830,7 @@ const openInspectionDialog = (item) => {
     location: item.location,
     date: item.inspectionDate || "",
     time: item.inspectionTime || "",
+    inspector: item.assignedInspector || null,
   };
   inspectionDialog.value = true;
 };
@@ -621,11 +843,13 @@ const saveInspection = () => {
     if (index !== -1) {
       applicants.value[index].inspectionDate = inspectionForm.value.date;
       applicants.value[index].inspectionTime = inspectionForm.value.time;
+      applicants.value[index].assignedInspector =
+        inspectionForm.value.inspector;
     }
     inspectionDialog.value = false;
     snackbar.value = {
       show: true,
-      text: "Inspection schedule updated",
+      text: `Inspection set for ${inspectionForm.value.date} assigned to ${inspectionForm.value.inspector}`,
       color: "success",
       icon: "mdi-calendar-check",
     };
@@ -650,10 +874,10 @@ const statCards = computed(() => [
     iconColor: "#f59e0b",
   },
   {
-    key: "passed",
-    label: "Passed",
-    value: applicants.value.filter((a) => a.permitStatus === "Passed").length,
-    clickStatus: "Passed",
+    key: "Approved",
+    label: "Approved",
+    value: applicants.value.filter((a) => a.permitStatus === "Approved").length,
+    clickStatus: "Approved",
     icon: "mdi-check-circle",
     iconColor: "#22c55e",
   },
@@ -684,14 +908,11 @@ const filteredApplicants = computed(() => {
 });
 
 const approvedApplicants = computed(() =>
-  applicants.value.filter((a) => a.permitStatus === "Passed" || a.dateIssued)
+  applicants.value.filter((a) => a.permitStatus === "Approved" || a.dateIssued)
 );
 const filterByStatus = (status) => (activeFilter.value = status);
 const viewDetails = (item) =>
-  router.push({
-    path: "/admin/rqmonitoring",
-    state: { complianceData: item },
-  });
+  router.push({ path: "/admin/rqmonitoring", state: { complianceData: item } });
 const logOut = () => console.log("Logging out...");
 const getAvatarColor = (initials) => {
   const colors = { LF: "#3B82F6", AC: "#22C55E", MS: "#F59E0B" };
