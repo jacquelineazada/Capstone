@@ -33,7 +33,7 @@
                       class="profile-name"
                       style="font-size: 14px; font-weight: 600"
                     >
-                      JT
+                      John Timothy Umali
                     </div>
                     <div class="profile-role" style="font-size: 12px">
                       OBO Monitoring

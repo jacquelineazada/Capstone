@@ -50,10 +50,10 @@
               <v-list density="compact" nav>
                 <v-list-item>
                   <v-list-item-title class="font-weight-bold"
-                    >Jacqueline Azada</v-list-item-title
+                    >John Timothy Umali</v-list-item-title
                   >
                   <v-list-item-subtitle
-                    >jacqueline.azada@nagacity.gov.ph</v-list-item-subtitle
+                    >john.timothy.umali@nagacity.gov.ph</v-list-item-subtitle
                   >
                 </v-list-item>
                 <v-divider class="my-1"></v-divider>
@@ -286,7 +286,7 @@
                       </span>
                       <span v-else :style="s.statusPillInactive">Pending</span>
                     </td>
-                    <td><span :style="s.statusPillInactive">INACTIVE</span></td>
+                    <td><span :style="s.statusPillInactive">ACTIVE</span></td>
                     <td class="d-flex align-center py-4">
                       <v-btn
                         size="small"
